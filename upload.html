@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Upload Documents | Warrior Tax Pro</title>
+    <meta name="description" content="Securely upload your tax documents to your tax preparer.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0D1117;
+            --bg2: #161B22;
+            --bg3: #1C2128;
+            --border: #21262D;
+            --cyan: #00BCD4;
+            --cyan-bright: #00E5FF;
+            --green: #2E7D32;
+            --green-light: #4CAF50;
+            --red: #C62828;
+            --red-light: #E53935;
+            --orange: #E65100;
+            --text: #E6EDF3;
+            --text2: #8B949E;
+            --text3: #484F58;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+            text-align: center;
+        }
+
+        .header-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-bright));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--bg);
+        }
+
+        .header-name {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .header-name span { color: var(--cyan); }
+
+        .header-secure {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--green-light);
+            font-weight: 500;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* SCREENS */
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* LOADING SCREEN */
+        .loading-screen {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border);
+            border-top-color: var(--cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-screen p {
+            color: var(--text2);
+            font-size: 14px;
+        }
+
+        /* ERROR SCREEN */
+        .error-screen {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .error-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(198, 40, 40, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 20px;
+        }
+
+        .error-screen h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .error-screen p {
+            color: var(--text2);
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* UPLOAD SCREEN */
+        .welcome-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .welcome-card h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .welcome-card .preparer {
+            font-size: 13px;
+            color: var(--cyan-bright);
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .welcome-card p {
+            font-size: 13px;
+            color: var(--text2);
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .expires {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(230, 81, 0, 0.12);
+            border: 1px solid rgba(230, 81, 0, 0.25);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: var(--orange);
+            font-weight: 500;
+            margin-top: 12px;
+        }
+
+        /* DOCUMENT CATEGORIES */
+        .doc-section {
+            margin-bottom: 16px;
+        }
+
+        .doc-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text2);
+            margin-bottom: 10px;
+            padding-left: 4px;
+        }
+
+        .upload-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 10px;
+            transition: border-color 0.2s;
+        }
+
+        .upload-card.has-files {
+            border-color: var(--green);
+        }
+
+        .upload-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .upload-card-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-card-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 188, 212, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .upload-card-label h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .upload-card-label p {
+            font-size: 11px;
+            color: var(--text3);
+            font-weight: 400;
+        }
+
+        .upload-card-count {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--green-light);
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.drag-over {
+            border-color: var(--cyan);
+            background: rgba(0, 188, 212, 0.04);
+        }
+
+        .upload-zone-text {
+            font-size: 13px;
+            color: var(--text2);
+            font-weight: 400;
+        }
+
+        .upload-zone-text strong {
+            color: var(--cyan-bright);
+            font-weight: 600;
+        }
+
+        .upload-zone-hint {
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 6px;
+        }
+
+        .upload-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .upload-btn {
+            flex: 1;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .upload-btn:hover {
+            border-color: var(--cyan);
+            background: rgba(0, 188, 212, 0.05);
+        }
+
+        .upload-btn.camera {
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-bright));
+            color: var(--bg);
+            border: none;
+        }
+
+        /* FILE LIST */
+        .file-list {
+            margin-top: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: var(--bg3);
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .file-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+            background: var(--bg);
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-size {
+            font-size: 11px;
+            color: var(--text3);
+        }
+
+        .file-remove {
+            background: none;
+            border: none;
+            color: var(--red-light);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .file-uploading {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .file-uploading .mini-spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--cyan);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        .file-status {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .file-status.success { color: var(--green-light); }
+        .file-status.error { color: var(--red-light); }
+
+        /* SUBMIT */
+        .submit-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .file-count-summary {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text2);
+            margin-bottom: 14px;
+        }
+
+        .file-count-summary strong {
+            color: var(--cyan-bright);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-bright));
+            color: var(--bg);
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(0, 188, 212, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .submit-note {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        /* SUCCESS SCREEN */
+        .success-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(46, 125, 50, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 24px;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .success-screen h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .success-screen .count {
+            font-size: 15px;
+            color: var(--cyan-bright);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .success-screen p {
+            font-size: 14px;
+            color: var(--text2);
+            font-weight: 300;
+            line-height: 1.7;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .success-contact {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 28px;
+            display: inline-block;
+        }
+
+        .success-contact h4 {
+            font-size: 12px;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .success-contact a {
+            color: var(--cyan-bright);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 24px 20px;
+            font-size: 11px;
+            color: var(--text3);
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: var(--text3);
+            text-decoration: none;
+        }
+
+        .footer a:hover { color: var(--cyan); }
+
+        /* HIDDEN INPUT */
+        input[type="file"] { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-brand">
+            <div class="header-logo">W</div>
+            <div class="header-name">Warrior Tax Pro <span>Elite</span></div>
+        </div>
+        <div class="header-secure">🔒 Secure Document Upload</div>
+    </div>
+
+    <div class="container">
+
+        <!-- LOADING SCREEN -->
+        <div class="screen active" id="loadingScreen">
+            <div class="loading-screen">
+                <div class="spinner"></div>
+                <p>Verifying your upload link...</p>
+            </div>
+        </div>
+
+        <!-- ERROR SCREEN -->
+        <div class="screen" id="errorScreen">
+            <div class="error-screen">
+                <div class="error-icon">⚠️</div>
+                <h2 id="errorTitle">Link Expired</h2>
+                <p id="errorMessage">This upload link is no longer valid. Please contact your tax preparer for a new link.</p>
+            </div>
+        </div>
+
+        <!-- UPLOAD SCREEN -->
+        <div class="screen" id="uploadScreen">
+            <div class="welcome-card">
+                <h1>Upload Your Tax Documents</h1>
+                <div class="preparer">Prepared by: <span id="preparerName">Your Tax Preparer</span></div>
+                <p>Please upload clear photos or scans of your tax documents below. Your files are encrypted and sent directly to your tax preparer.</p>
+                <div class="expires">⏱️ Link expires: <strong id="expiresDate">--</strong></div>
+            </div>
+
+            <!-- Income Documents -->
+            <div class="doc-section">
+                <div class="doc-section-title">Income Documents</div>
+
+                <div class="upload-card" id="card-w2">
+                    <div class="upload-card-header">
+                        <div class="upload-card-label">
+                            <div class="upload-card-icon">📄</div>
+                            <div>
+                                <h3>W-2 Forms</h3>
+                                <p>Wage and tax statements from employers</p>
+                            </div>
+                        </div>
+                        <div class="upload-card-count" id="count-w2"></div>
+                    </div>
+                    <div class="upload-zone" onclick="document.getElementById('input-w2').click()" 
+                         ondragover="event.preventDefault();this.classList.add('drag-over')"
+                         ondragleave="this.classList.remove('drag-over')"
+                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'w2')">
+                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
+                        <div class="upload-zone-hint">JPG, PNG, PDF — up to 10MB each</div>
+                    </div>
+                    <div class="upload-buttons">
+                        <button class="upload-btn camera" onclick="capturePhoto('w2')">📷 Take Photo</button>
+                        <button class="upload-btn" onclick="document.getElementById('input-w2').click()">📁 Browse</button>
+                    </div>
+                    <input type="file" id="input-w2" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'w2')">
+                    <div class="file-list" id="files-w2"></div>
+                </div>
+
+                <div class="upload-card" id="card-1099">
+                    <div class="upload-card-header">
+                        <div class="upload-card-label">
+                            <div class="upload-card-icon">📋</div>
+                            <div>
+                                <h3>1099 Forms</h3>
+                                <p>Self-employment, interest, dividends, etc.</p>
+                            </div>
+                        </div>
+                        <div class="upload-card-count" id="count-1099"></div>
+                    </div>
+                    <div class="upload-zone" onclick="document.getElementById('input-1099').click()"
+                         ondragover="event.preventDefault();this.classList.add('drag-over')"
+                         ondragleave="this.classList.remove('drag-over')"
+                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'1099')">
+                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
+                        <div class="upload-zone-hint">JPG, PNG, PDF — up to 10MB each</div>
+                    </div>
+                    <div class="upload-buttons">
+                        <button class="upload-btn camera" onclick="capturePhoto('1099')">📷 Take Photo</button>
+                        <button class="upload-btn" onclick="document.getElementById('input-1099').click()">📁 Browse</button>
+                    </div>
+                    <input type="file" id="input-1099" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'1099')">
+                    <div class="file-list" id="files-1099"></div>
+                </div>
+            </div>
+
+            <!-- ID Documents -->
+            <div class="doc-section">
+                <div class="doc-section-title">Identification</div>
+
+                <div class="upload-card" id="card-id">
+                    <div class="upload-card-header">
+                        <div class="upload-card-label">
+                            <div class="upload-card-icon">🪪</div>
+                            <div>
+                                <h3>Photo ID</h3>
+                                <p>Driver's license or state ID (front & back)</p>
+                            </div>
+                        </div>
+                        <div class="upload-card-count" id="count-id"></div>
+                    </div>
+                    <div class="upload-zone" onclick="document.getElementById('input-id').click()"
+                         ondragover="event.preventDefault();this.classList.add('drag-over')"
+                         ondragleave="this.classList.remove('drag-over')"
+                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'id')">
+                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
+                        <div class="upload-zone-hint">Front and back — JPG, PNG, PDF</div>
+                    </div>
+                    <div class="upload-buttons">
+                        <button class="upload-btn camera" onclick="capturePhoto('id')">📷 Take Photo</button>
+                        <button class="upload-btn" onclick="document.getElementById('input-id').click()">📁 Browse</button>
+                    </div>
+                    <input type="file" id="input-id" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'id')">
+                    <div class="file-list" id="files-id"></div>
+                </div>
+
+                <div class="upload-card" id="card-ssn">
+                    <div class="upload-card-header">
+                        <div class="upload-card-label">
+                            <div class="upload-card-icon">🔐</div>
+                            <div>
+                                <h3>Social Security Card</h3>
+                                <p>For taxpayer, spouse, and dependents</p>
+                            </div>
+                        </div>
+                        <div class="upload-card-count" id="count-ssn"></div>
+                    </div>
+                    <div class="upload-zone" onclick="document.getElementById('input-ssn').click()"
+                         ondragover="event.preventDefault();this.classList.add('drag-over')"
+                         ondragleave="this.classList.remove('drag-over')"
+                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'ssn')">
+                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
+                        <div class="upload-zone-hint">JPG, PNG, PDF — up to 10MB each</div>
+                    </div>
+                    <div class="upload-buttons">
+                        <button class="upload-btn camera" onclick="capturePhoto('ssn')">📷 Take Photo</button>
+                        <button class="upload-btn" onclick="document.getElementById('input-ssn').click()">📁 Browse</button>
+                    </div>
+                    <input type="file" id="input-ssn" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'ssn')">
+                    <div class="file-list" id="files-ssn"></div>
+                </div>
+            </div>
+
+            <!-- Other Documents -->
+            <div class="doc-section">
+                <div class="doc-section-title">Other Documents</div>
+
+                <div class="upload-card" id="card-other">
+                    <div class="upload-card-header">
+                        <div class="upload-card-label">
+                            <div class="upload-card-icon">📎</div>
+                            <div>
+                                <h3>Other Documents</h3>
+                                <p>1098, SSA-1099, receipts, or anything else</p>
+                            </div>
+                        </div>
+                        <div class="upload-card-count" id="count-other"></div>
+                    </div>
+                    <div class="upload-zone" onclick="document.getElementById('input-other').click()"
+                         ondragover="event.preventDefault();this.classList.add('drag-over')"
+                         ondragleave="this.classList.remove('drag-over')"
+                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'other')">
+                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
+                        <div class="upload-zone-hint">JPG, PNG, PDF — up to 10MB each</div>
+                    </div>
+                    <div class="upload-buttons">
+                        <button class="upload-btn camera" onclick="capturePhoto('other')">📷 Take Photo</button>
+                        <button class="upload-btn" onclick="document.getElementById('input-other').click()">📁 Browse</button>
+                    </div>
+                    <input type="file" id="input-other" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'other')">
+                    <div class="file-list" id="files-other"></div>
+                </div>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="submit-section">
+                <div class="file-count-summary">
+                    <strong id="totalCount">0</strong> documents ready to submit
+                </div>
+                <button class="submit-btn" id="submitBtn" disabled onclick="submitAll()">
+                    Submit Documents
+                </button>
+                <p class="submit-note">
+                    Your documents are transmitted securely and will only be accessible 
+                    by your assigned tax preparer. Files are encrypted during transfer.
+                </p>
+            </div>
+        </div>
+
+        <!-- SUCCESS SCREEN -->
+        <div class="screen" id="successScreen">
+            <div class="success-screen">
+                <div class="success-icon">✅</div>
+                <h2>Documents Submitted!</h2>
+                <p class="count" id="successCount">0 documents uploaded successfully</p>
+                <p>Your tax preparer has been notified and will review your documents shortly. You may close this page.</p>
+                <div class="success-contact">
+                    <h4>Questions?</h4>
+                    <a href="tel:+17738271858" id="contactPhone">(773) 827-1858</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        &copy; 2026 Warrior Financial Services LLC<br>
+        <a href="privacy-policy.html">Privacy Policy</a> · <a href="terms.html">Terms</a>
+    </div>
+
+    <!-- CAMERA INPUT (hidden) -->
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+
+    <script>
+        // ============================================================
+        // CONFIGURATION — Update this URL when backend is deployed
+        // ============================================================
+        const API_BASE = 'https://api.warriortaxpro.com'; // Change to your VPS URL
+        // For local testing: const API_BASE = 'https://localhost:5252';
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        const fileStore = {
+            'w2': [],
+            '1099': [],
+            'id': [],
+            'ssn': [],
+            'other': []
+        };
+
+        let sessionToken = null;
+        let sessionData = null;
+        let currentCategory = null;
+
+        // ============================================================
+        // INIT — Read token from URL and validate
+        // ============================================================
+        async function init() {
+            const path = window.location.pathname;
+            const parts = path.split('/');
+            // Support /upload/TOKEN or ?token=TOKEN
+            const urlParams = new URLSearchParams(window.location.search);
+            sessionToken = urlParams.get('token') || parts[parts.length - 1];
+
+            if (!sessionToken || sessionToken === 'upload' || sessionToken === '') {
+                showError('Invalid Link', 'This upload link appears to be invalid. Please check the link you received or contact your tax preparer for a new one.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/intelliprep/session/${sessionToken}`);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        showError('Link Not Found', 'This upload link was not found. It may have already been used or the link is incorrect.');
+                    } else if (response.status === 410) {
+                        showError('Link Expired', 'This upload link has expired. Please contact your tax preparer for a new link.');
+                    } else {
+                        throw new Error('Server error');
+                    }
+                    return;
+                }
+
+                sessionData = await response.json();
+
+                // Check expiration
+                if (sessionData.expiresAt) {
+                    const expires = new Date(sessionData.expiresAt);
+                    if (expires < new Date()) {
+                        showError('Link Expired', 'This upload link has expired. Please contact your tax preparer for a new link.');
+                        return;
+                    }
+                    document.getElementById('expiresDate').textContent = expires.toLocaleDateString('en-US', {
+                        month: 'short', day: 'numeric', year: 'numeric'
+                    });
+                }
+
+                // Set preparer name
+                if (sessionData.preparerName) {
+                    document.getElementById('preparerName').textContent = sessionData.preparerName;
+                }
+
+                // Set contact phone
+                if (sessionData.officePhone) {
+                    document.getElementById('contactPhone').textContent = sessionData.officePhone;
+                    document.getElementById('contactPhone').href = `tel:${sessionData.officePhone}`;
+                }
+
+                showScreen('uploadScreen');
+
+            } catch (err) {
+                // FOR DEMO/TESTING: If API is unreachable, show upload screen anyway
+                console.warn('API unreachable, showing demo mode:', err);
+                document.getElementById('preparerName').textContent = 'Warrior Financial Services';
+                document.getElementById('expiresDate').textContent = '7 days from now';
+                showScreen('uploadScreen');
+            }
+        }
+
+        // ============================================================
+        // SCREEN MANAGEMENT
+        // ============================================================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function showError(title, message) {
+            document.getElementById('errorTitle').textContent = title;
+            document.getElementById('errorMessage').textContent = message;
+            showScreen('errorScreen');
+        }
+
+        // ============================================================
+        // FILE HANDLING
+        // ============================================================
+        function handleFiles(fileList, category) {
+            const files = Array.from(fileList);
+            const maxSize = 10 * 1024 * 1024; // 10MB
+
+            files.forEach(file => {
+                if (file.size > maxSize) {
+                    alert(`${file.name} is too large (max 10MB). Please use a smaller file.`);
+                    return;
+                }
+
+                const id = Date.now() + Math.random().toString(36).substr(2, 5);
+                const entry = { id, file, name: file.name, size: file.size, status: 'ready' };
+
+                // Create thumbnail for images
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        entry.thumb = e.target.result;
+                        renderFile(category, entry);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    entry.thumb = null;
+                    renderFile(category, entry);
+                }
+
+                fileStore[category].push(entry);
+            });
+
+            updateCounts();
+            // Reset input so same file can be re-added
+            document.getElementById(`input-${category}`).value = '';
+        }
+
+        function handleDrop(event, category) {
+            const files = event.dataTransfer.files;
+            handleFiles(files, category);
+        }
+
+        function capturePhoto(category) {
+            currentCategory = category;
+            const cameraInput = document.getElementById('cameraInput');
+            cameraInput.onchange = function () {
+                if (this.files.length > 0) {
+                    handleFiles(this.files, currentCategory);
+                }
+                this.value = '';
+            };
+            cameraInput.click();
+        }
+
+        function removeFile(category, id) {
+            fileStore[category] = fileStore[category].filter(f => f.id !== id);
+            document.getElementById(`file-${id}`)?.remove();
+            updateCounts();
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        function renderFile(category, entry) {
+            const container = document.getElementById(`files-${category}`);
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.id = `file-${entry.id}`;
+
+            const thumbHtml = entry.thumb
+                ? `<img class="file-thumb" src="${entry.thumb}" alt="">`
+                : `<div class="file-thumb" style="display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--bg);">📄</div>`;
+
+            div.innerHTML = `
+                ${thumbHtml}
+                <div class="file-info">
+                    <div class="file-name">${entry.name}</div>
+                    <div class="file-size">${formatSize(entry.size)}</div>
+                </div>
+                <button class="file-remove" onclick="removeFile('${category}','${entry.id}')" title="Remove">✕</button>
+            `;
+
+            container.appendChild(div);
+        }
+
+        function updateCounts() {
+            let total = 0;
+            Object.keys(fileStore).forEach(cat => {
+                const count = fileStore[cat].length;
+                total += count;
+                const countEl = document.getElementById(`count-${cat}`);
+                const cardEl = document.getElementById(`card-${cat}`);
+                countEl.textContent = count > 0 ? `${count} file${count > 1 ? 's' : ''}` : '';
+                cardEl.classList.toggle('has-files', count > 0);
+            });
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('submitBtn').disabled = total === 0;
+        }
+
+        // ============================================================
+        // SUBMIT ALL FILES
+        // ============================================================
+        async function submitAll() {
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Uploading...';
+
+            let uploaded = 0;
+            let failed = 0;
+
+            for (const category of Object.keys(fileStore)) {
+                for (const entry of fileStore[category]) {
+                    try {
+                        const formData = new FormData();
+                        formData.append('file', entry.file);
+                        formData.append('category', category);
+                        formData.append('token', sessionToken);
+
+                        const response = await fetch(`${API_BASE}/api/intelliprep/upload/${sessionToken}`, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (response.ok) {
+                            uploaded++;
+                            // Update UI
+                            const el = document.getElementById(`file-${entry.id}`);
+                            if (el) {
+                                const removeBtn = el.querySelector('.file-remove');
+                                if (removeBtn) {
+                                    removeBtn.outerHTML = '<span class="file-status success">✓ Uploaded</span>';
+                                }
+                            }
+                        } else {
+                            failed++;
+                            const el = document.getElementById(`file-${entry.id}`);
+                            if (el) {
+                                const removeBtn = el.querySelector('.file-remove');
+                                if (removeBtn) {
+                                    removeBtn.outerHTML = '<span class="file-status error">✕ Failed</span>';
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        failed++;
+                        console.error('Upload failed:', err);
+                    }
+
+                    // Update button with progress
+                    btn.textContent = `Uploading... (${uploaded + failed}/${getTotalCount()})`;
+                }
+            }
+
+            if (failed > 0 && uploaded === 0) {
+                btn.textContent = 'Upload Failed — Try Again';
+                btn.disabled = false;
+                alert('Unable to upload files. Please check your connection and try again.');
+            } else {
+                document.getElementById('successCount').textContent = `${uploaded} document${uploaded !== 1 ? 's' : ''} uploaded successfully`;
+                showScreen('successScreen');
+            }
+        }
+
+        function getTotalCount() {
+            return Object.values(fileStore).reduce((sum, arr) => sum + arr.length, 0);
+        }
+
+        // ============================================================
+        // START
+        // ============================================================
+        init();
+    </script>
+
+</body>
+</html>
