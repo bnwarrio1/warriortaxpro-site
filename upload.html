@@ -409,6 +409,199 @@
             border-top: 1px solid var(--border);
         }
 
+        /* CLIENT INFO CARDS */
+        .info-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .info-card-header:hover {
+            background: rgba(0, 188, 212, 0.03);
+        }
+
+        .info-card-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card-label h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .info-card-label p {
+            font-size: 11px;
+            color: var(--text3);
+        }
+
+        .info-toggle {
+            font-size: 22px;
+            font-weight: 300;
+            color: var(--cyan);
+            transition: transform 0.3s;
+            width: 28px;
+            text-align: center;
+        }
+
+        .info-toggle.open {
+            transform: rotate(45deg);
+        }
+
+        .info-card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 16px;
+        }
+
+        .info-card-body.open {
+            max-height: 800px;
+            padding: 0 16px 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .info-input {
+            flex: 1;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 11px 14px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        .info-input:focus {
+            border-color: var(--cyan);
+        }
+
+        .info-input::placeholder {
+            color: var(--text3);
+        }
+
+        .info-input.info-sm { max-width: 45%; }
+        .info-input.info-xs { max-width: 30%; }
+
+        select.info-input {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238B949E' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+
+        .info-textarea {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            outline: none;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.2s;
+        }
+
+        .info-textarea:focus {
+            border-color: var(--cyan);
+        }
+
+        .info-textarea::placeholder {
+            color: var(--text3);
+        }
+
+        .info-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text2);
+            cursor: pointer;
+        }
+
+        .info-check input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--cyan);
+        }
+
+        .dependent-row {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .dep-row-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .dep-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--cyan-bright);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dep-remove {
+            background: none;
+            border: none;
+            color: var(--red-light);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 2px 6px;
+        }
+
+        .add-dep-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--cyan);
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            margin-top: 4px;
+        }
+
+        .add-dep-btn:hover {
+            border-color: var(--cyan);
+            background: rgba(0, 188, 212, 0.05);
+        }
+
         .file-count-summary {
             text-align: center;
             font-size: 13px;
@@ -731,16 +924,177 @@
                 </div>
             </div>
 
+            <!-- CLIENT INFORMATION -->
+            <div class="doc-section">
+                <div class="doc-section-title">📝 Client Information</div>
+                <p style="font-size:13px;color:var(--text2);font-weight:300;margin-bottom:16px;padding:0 4px;">
+                    Help your tax preparer by providing the information below. This saves time and helps us prepare your return faster.
+                </p>
+
+                <!-- Dependents -->
+                <div class="info-card">
+                    <div class="info-card-header" onclick="toggleInfoCard('dependents')">
+                        <div class="info-card-label">
+                            <div class="upload-card-icon">👨‍👩‍👧‍👦</div>
+                            <div>
+                                <h3>Dependents</h3>
+                                <p>Names, dates of birth, SSN, relationship</p>
+                            </div>
+                        </div>
+                        <div class="info-toggle" id="toggle-dependents">+</div>
+                    </div>
+                    <div class="info-card-body" id="body-dependents">
+                        <div id="dependents-list">
+                            <div class="dependent-row" id="dep-1">
+                                <div class="dep-row-header">
+                                    <span class="dep-label">Dependent 1</span>
+                                    <button class="dep-remove" onclick="removeDependent(1)" style="display:none;">✕</button>
+                                </div>
+                                <div class="form-row">
+                                    <input type="text" placeholder="Full Name" class="info-input" data-dep="1" data-field="name">
+                                    <input type="text" placeholder="Relationship" class="info-input info-sm" data-dep="1" data-field="relationship">
+                                </div>
+                                <div class="form-row">
+                                    <input type="date" class="info-input" data-dep="1" data-field="dob" title="Date of Birth">
+                                    <input type="text" placeholder="SSN (xxx-xx-xxxx)" class="info-input" data-dep="1" data-field="ssn">
+                                </div>
+                                <div class="form-row">
+                                    <input type="number" placeholder="Months lived with you" class="info-input info-sm" data-dep="1" data-field="months" min="0" max="12">
+                                    <label class="info-check"><input type="checkbox" data-dep="1" data-field="student"> Full-time student</label>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="add-dep-btn" onclick="addDependent()">+ Add Another Dependent</button>
+                    </div>
+                </div>
+
+                <!-- Childcare -->
+                <div class="info-card">
+                    <div class="info-card-header" onclick="toggleInfoCard('childcare')">
+                        <div class="info-card-label">
+                            <div class="upload-card-icon">🧒</div>
+                            <div>
+                                <h3>Childcare / Daycare</h3>
+                                <p>Provider name, address, amount paid</p>
+                            </div>
+                        </div>
+                        <div class="info-toggle" id="toggle-childcare">+</div>
+                    </div>
+                    <div class="info-card-body" id="body-childcare">
+                        <div class="form-row">
+                            <input type="text" placeholder="Provider / Daycare Name" class="info-input" id="childcare-name">
+                        </div>
+                        <div class="form-row">
+                            <input type="text" placeholder="Provider Address" class="info-input" id="childcare-address">
+                        </div>
+                        <div class="form-row">
+                            <input type="text" placeholder="Provider EIN or SSN" class="info-input" id="childcare-ein">
+                            <input type="number" placeholder="Amount Paid ($)" class="info-input info-sm" id="childcare-amount">
+                        </div>
+                        <div class="form-row">
+                            <input type="text" placeholder="Child(ren) name(s) who attended" class="info-input" id="childcare-children">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address & Personal Changes -->
+                <div class="info-card">
+                    <div class="info-card-header" onclick="toggleInfoCard('personal')">
+                        <div class="info-card-label">
+                            <div class="upload-card-icon">🏠</div>
+                            <div>
+                                <h3>Address & Personal Info</h3>
+                                <p>New address, marital status changes</p>
+                            </div>
+                        </div>
+                        <div class="info-toggle" id="toggle-personal">+</div>
+                    </div>
+                    <div class="info-card-body" id="body-personal">
+                        <label class="info-check" style="margin-bottom:12px;">
+                            <input type="checkbox" id="address-changed" onchange="document.getElementById('new-address-fields').style.display=this.checked?'block':'none'"> 
+                            My address changed since last year
+                        </label>
+                        <div id="new-address-fields" style="display:none;">
+                            <div class="form-row">
+                                <input type="text" placeholder="New Street Address" class="info-input" id="new-address">
+                            </div>
+                            <div class="form-row">
+                                <input type="text" placeholder="City" class="info-input" id="new-city">
+                                <input type="text" placeholder="State" class="info-input info-xs" id="new-state">
+                                <input type="text" placeholder="ZIP" class="info-input info-xs" id="new-zip">
+                            </div>
+                        </div>
+                        <div class="form-row" style="margin-top:12px;">
+                            <select class="info-input" id="filing-status">
+                                <option value="">Filing Status (if known)</option>
+                                <option value="single">Single</option>
+                                <option value="mfj">Married Filing Jointly</option>
+                                <option value="mfs">Married Filing Separately</option>
+                                <option value="hoh">Head of Household</option>
+                                <option value="qss">Qualifying Surviving Spouse</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bank Account -->
+                <div class="info-card">
+                    <div class="info-card-header" onclick="toggleInfoCard('bank')">
+                        <div class="info-card-label">
+                            <div class="upload-card-icon">🏦</div>
+                            <div>
+                                <h3>Direct Deposit Info</h3>
+                                <p>Bank routing & account number</p>
+                            </div>
+                        </div>
+                        <div class="info-toggle" id="toggle-bank">+</div>
+                    </div>
+                    <div class="info-card-body" id="body-bank">
+                        <div class="form-row">
+                            <input type="text" placeholder="Bank Name" class="info-input" id="bank-name">
+                        </div>
+                        <div class="form-row">
+                            <input type="text" placeholder="Routing Number (9 digits)" class="info-input" id="bank-routing" maxlength="9">
+                            <input type="text" placeholder="Account Number" class="info-input" id="bank-account">
+                        </div>
+                        <div class="form-row">
+                            <select class="info-input info-sm" id="bank-type">
+                                <option value="">Account Type</option>
+                                <option value="checking">Checking</option>
+                                <option value="savings">Savings</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes to Preparer -->
+                <div class="info-card">
+                    <div class="info-card-header" onclick="toggleInfoCard('notes')">
+                        <div class="info-card-label">
+                            <div class="upload-card-icon">💬</div>
+                            <div>
+                                <h3>Notes to Preparer</h3>
+                                <p>Anything else we should know</p>
+                            </div>
+                        </div>
+                        <div class="info-toggle" id="toggle-notes">+</div>
+                    </div>
+                    <div class="info-card-body" id="body-notes">
+                        <textarea class="info-textarea" id="preparer-notes" placeholder="Examples:&#10;• I started a new job in June&#10;• I sold my house in October&#10;• I have a new baby born in 2025&#10;• I paid tuition for college&#10;• I received unemployment benefits&#10;• I moved from Indiana to Illinois"></textarea>
+                    </div>
+                </div>
+            </div>
+
             <!-- SUBMIT -->
             <div class="submit-section">
                 <div class="file-count-summary">
                     <strong id="totalCount">0</strong> documents ready to submit
                 </div>
-                <button class="submit-btn" id="submitBtn" disabled onclick="submitAll()">
-                    Submit Documents
+                <button class="submit-btn" id="submitBtn" onclick="submitAll()">
+                    Submit Documents & Info
                 </button>
                 <p class="submit-note">
-                    Your documents are transmitted securely and will only be accessible 
+                    Your documents and information are transmitted securely and will only be accessible 
                     by your assigned tax preparer. Files are encrypted during transfer.
                 </p>
             </div>
@@ -775,7 +1129,7 @@
         // ============================================================
         // CONFIGURATION — Update this URL when backend is deployed
         // ============================================================
-        const API_BASE = 'https://api.warriortaxservice.com'; // Change to your VPS URL
+        const API_BASE = 'https://api.warriortaxservice.com';
         // For local testing: const API_BASE = 'https://localhost:5252';
 
         // ============================================================
@@ -792,6 +1146,105 @@
         let sessionToken = null;
         let sessionData = null;
         let currentCategory = null;
+        let depCount = 1;
+
+        // ============================================================
+        // INFO CARD TOGGLES
+        // ============================================================
+        function toggleInfoCard(id) {
+            const body = document.getElementById(`body-${id}`);
+            const toggle = document.getElementById(`toggle-${id}`);
+            body.classList.toggle('open');
+            toggle.classList.toggle('open');
+        }
+
+        // ============================================================
+        // DEPENDENT MANAGEMENT
+        // ============================================================
+        function addDependent() {
+            depCount++;
+            const list = document.getElementById('dependents-list');
+            const div = document.createElement('div');
+            div.className = 'dependent-row';
+            div.id = `dep-${depCount}`;
+            div.innerHTML = `
+                <div class="dep-row-header">
+                    <span class="dep-label">Dependent ${depCount}</span>
+                    <button class="dep-remove" onclick="removeDependent(${depCount})">✕</button>
+                </div>
+                <div class="form-row">
+                    <input type="text" placeholder="Full Name" class="info-input" data-dep="${depCount}" data-field="name">
+                    <input type="text" placeholder="Relationship" class="info-input info-sm" data-dep="${depCount}" data-field="relationship">
+                </div>
+                <div class="form-row">
+                    <input type="date" class="info-input" data-dep="${depCount}" data-field="dob" title="Date of Birth">
+                    <input type="text" placeholder="SSN (xxx-xx-xxxx)" class="info-input" data-dep="${depCount}" data-field="ssn">
+                </div>
+                <div class="form-row">
+                    <input type="number" placeholder="Months lived with you" class="info-input info-sm" data-dep="${depCount}" data-field="months" min="0" max="12">
+                    <label class="info-check"><input type="checkbox" data-dep="${depCount}" data-field="student"> Full-time student</label>
+                </div>
+            `;
+            list.appendChild(div);
+        }
+
+        function removeDependent(id) {
+            document.getElementById(`dep-${id}`)?.remove();
+        }
+
+        // ============================================================
+        // COLLECT CLIENT INFO
+        // ============================================================
+        function collectClientInfo() {
+            // Dependents
+            const dependents = [];
+            document.querySelectorAll('.dependent-row').forEach(row => {
+                const depId = row.id.replace('dep-', '');
+                const name = row.querySelector(`[data-dep="${depId}"][data-field="name"]`)?.value || '';
+                if (name.trim()) {
+                    dependents.push({
+                        name: name,
+                        relationship: row.querySelector(`[data-dep="${depId}"][data-field="relationship"]`)?.value || '',
+                        dob: row.querySelector(`[data-dep="${depId}"][data-field="dob"]`)?.value || '',
+                        ssn: row.querySelector(`[data-dep="${depId}"][data-field="ssn"]`)?.value || '',
+                        months: row.querySelector(`[data-dep="${depId}"][data-field="months"]`)?.value || '',
+                        student: row.querySelector(`[data-dep="${depId}"][data-field="student"]`)?.checked || false
+                    });
+                }
+            });
+
+            // Childcare
+            const childcare = {
+                providerName: document.getElementById('childcare-name')?.value || '',
+                providerAddress: document.getElementById('childcare-address')?.value || '',
+                providerEin: document.getElementById('childcare-ein')?.value || '',
+                amountPaid: document.getElementById('childcare-amount')?.value || '',
+                children: document.getElementById('childcare-children')?.value || ''
+            };
+
+            // Address / Personal
+            const personal = {
+                addressChanged: document.getElementById('address-changed')?.checked || false,
+                newAddress: document.getElementById('new-address')?.value || '',
+                newCity: document.getElementById('new-city')?.value || '',
+                newState: document.getElementById('new-state')?.value || '',
+                newZip: document.getElementById('new-zip')?.value || '',
+                filingStatus: document.getElementById('filing-status')?.value || ''
+            };
+
+            // Bank
+            const bank = {
+                bankName: document.getElementById('bank-name')?.value || '',
+                routing: document.getElementById('bank-routing')?.value || '',
+                account: document.getElementById('bank-account')?.value || '',
+                type: document.getElementById('bank-type')?.value || ''
+            };
+
+            // Notes
+            const notes = document.getElementById('preparer-notes')?.value || '';
+
+            return { dependents, childcare, personal, bank, notes };
+        }
 
         // ============================================================
         // INIT — Read token from URL and validate
@@ -971,11 +1424,27 @@
             });
 
             document.getElementById('totalCount').textContent = total;
-            document.getElementById('submitBtn').disabled = total === 0;
+            // Enable submit if files added (client info alone also enables via input listener below)
+            document.getElementById('submitBtn').disabled = total === 0 && !hasClientInfo();
         }
 
+        function hasClientInfo() {
+            const notes = document.getElementById('preparer-notes')?.value?.trim();
+            const depName = document.querySelector('[data-dep="1"][data-field="name"]')?.value?.trim();
+            const bankRouting = document.getElementById('bank-routing')?.value?.trim();
+            const childcare = document.getElementById('childcare-name')?.value?.trim();
+            return !!(notes || depName || bankRouting || childcare);
+        }
+
+        // Listen for info input changes to enable submit
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('info-input') || e.target.classList.contains('info-textarea')) {
+                document.getElementById('submitBtn').disabled = getTotalCount() === 0 && !hasClientInfo();
+            }
+        });
+
         // ============================================================
-        // SUBMIT ALL FILES
+        // SUBMIT ALL FILES + CLIENT INFO
         // ============================================================
         async function submitAll() {
             const btn = document.getElementById('submitBtn');
@@ -984,7 +1453,21 @@
 
             let uploaded = 0;
             let failed = 0;
+            const totalFiles = getTotalCount();
 
+            // First, submit client info
+            try {
+                const clientInfo = collectClientInfo();
+                await fetch(`${API_BASE}/api/intelliprep/client-info/${sessionToken}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(clientInfo)
+                });
+            } catch (err) {
+                console.warn('Client info submission failed (non-critical):', err);
+            }
+
+            // Then upload files
             for (const category of Object.keys(fileStore)) {
                 for (const entry of fileStore[category]) {
                     try {
@@ -1000,7 +1483,6 @@
 
                         if (response.ok) {
                             uploaded++;
-                            // Update UI
                             const el = document.getElementById(`file-${entry.id}`);
                             if (el) {
                                 const removeBtn = el.querySelector('.file-remove');
@@ -1023,17 +1505,21 @@
                         console.error('Upload failed:', err);
                     }
 
-                    // Update button with progress
-                    btn.textContent = `Uploading... (${uploaded + failed}/${getTotalCount()})`;
+                    btn.textContent = `Uploading... (${uploaded + failed}/${totalFiles})`;
                 }
             }
 
-            if (failed > 0 && uploaded === 0) {
+            if (failed > 0 && uploaded === 0 && totalFiles > 0) {
                 btn.textContent = 'Upload Failed — Try Again';
                 btn.disabled = false;
                 alert('Unable to upload files. Please check your connection and try again.');
             } else {
-                document.getElementById('successCount').textContent = `${uploaded} document${uploaded !== 1 ? 's' : ''} uploaded successfully`;
+                const infoSent = collectClientInfo();
+                const hasInfo = infoSent.dependents.length > 0 || infoSent.notes || infoSent.childcare.providerName || infoSent.bank.routing;
+                const msg = totalFiles > 0 
+                    ? `${uploaded} document${uploaded !== 1 ? 's' : ''} uploaded successfully${hasInfo ? ' + client info submitted' : ''}`
+                    : 'Client information submitted successfully';
+                document.getElementById('successCount').textContent = msg;
                 showScreen('successScreen');
             }
         }
