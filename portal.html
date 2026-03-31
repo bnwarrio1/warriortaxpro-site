@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntelliWarrior Client Connect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0D1117;
+            --bg-secondary: #161B22;
+            --bg-card: #1C2128;
+            --bg-input: #21262D;
+            --border: #30363D;
+            --border-light: #3D444D;
+            --cyan: #00BCD4;
+            --cyan-bright: #00E5FF;
+            --cyan-glow: rgba(0, 188, 212, 0.15);
+            --cyan-glow-strong: rgba(0, 188, 212, 0.3);
+            --green: #4CAF50;
+            --green-glow: rgba(76, 175, 80, 0.15);
+            --amber: #FF9800;
+            --amber-glow: rgba(255, 152, 0, 0.15);
+            --red: #F44336;
+            --red-glow: rgba(244, 67, 54, 0.15);
+            --text-primary: #E6EDF3;
+            --text-secondary: #8B949E;
+            --text-muted: #6E7681;
+            --gold: #C9A84C;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ═══ BACKGROUND EFFECTS ═══ */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(0, 188, 212, 0.03) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(0, 229, 255, 0.02) 0%, transparent 50%);
+            z-index: -1;
+            animation: ambientShift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes ambientShift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-2%, 2%) rotate(1deg); }
+        }
+
+        /* ═══ HEADER ═══ */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-logo {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-bright));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--bg-primary);
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header-title span {
+            color: var(--cyan);
+        }
+
+        .header-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 1px;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .header-user .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--cyan);
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        /* ═══ LOGIN SCREEN ═══ */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 24px;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--cyan-bright), var(--cyan));
+        }
+
+        .login-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-bright));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 32px var(--cyan-glow-strong);
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .login-desc {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px var(--cyan-glow);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+            text-transform: none;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-bright));
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px var(--cyan-glow-strong);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-error {
+            background: var(--red-glow);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--red);
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ═══ DASHBOARD ═══ */
+        .dashboard {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, rgba(0, 188, 212, 0.08), rgba(0, 229, 255, 0.04));
+            border: 1px solid rgba(0, 188, 212, 0.2);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 28px;
+        }
+
+        .welcome-text {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .welcome-sub {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* ═══ STATUS CARDS ═══ */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .status-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px 20px;
+            transition: all 0.2s;
+        }
+
+        .status-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .status-card-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .status-card-value {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .status-card-value.green { color: var(--green); }
+        .status-card-value.cyan { color: var(--cyan); }
+        .status-card-value.amber { color: var(--amber); }
+        .status-card-value.red { color: var(--red); }
+
+        .status-card-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        /* ═══ STATUS BADGE ═══ */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .badge-progress { background: var(--amber-glow); color: var(--amber); }
+        .badge-progress .badge-dot { background: var(--amber); }
+        .badge-accepted { background: var(--green-glow); color: var(--green); }
+        .badge-accepted .badge-dot { background: var(--green); }
+        .badge-ready { background: var(--cyan-glow); color: var(--cyan); }
+        .badge-ready .badge-dot { background: var(--cyan); }
+        .badge-rejected { background: var(--red-glow); color: var(--red); }
+        .badge-rejected .badge-dot { background: var(--red); }
+
+        /* ═══ SECTIONS ═══ */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 18px;
+        }
+
+        .section-body {
+            padding: 24px;
+        }
+
+        /* ═══ RETURN DETAILS ═══ */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+        }
+
+        .detail-row:last-child { border-bottom: none; }
+
+        .detail-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .detail-value.money {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+        }
+
+        /* ═══ MESSAGES ═══ */
+        .messages-container {
+            max-height: 360px;
+            overflow-y: auto;
+            padding: 16px 0;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .message.from-client { flex-direction: row; }
+        .message.from-preparer { flex-direction: row-reverse; }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .from-client .message-avatar {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .from-preparer .message-avatar {
+            background: var(--cyan-glow);
+            border: 1px solid rgba(0, 188, 212, 0.3);
+            color: var(--cyan);
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .from-client .message-bubble {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-top-left-radius: 4px;
+        }
+
+        .from-preparer .message-bubble {
+            background: rgba(0, 188, 212, 0.1);
+            border: 1px solid rgba(0, 188, 212, 0.2);
+            border-top-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .message-input-row {
+            display: flex;
+            gap: 10px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--cyan);
+        }
+
+        .btn-send {
+            padding: 12px 24px;
+            background: var(--cyan);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+
+        .btn-send:hover {
+            background: var(--cyan-bright);
+        }
+
+        /* ═══ DOCUMENTS ═══ */
+        .doc-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+        }
+
+        .doc-item:last-child { border-bottom: none; }
+
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .doc-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .doc-name { font-size: 14px; font-weight: 500; }
+        .doc-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        .btn-download {
+            padding: 8px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--cyan);
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            border-color: var(--cyan);
+            background: var(--cyan-glow);
+        }
+
+        /* ═══ SIGN 8879 ═══ */
+        .sign-section {
+            background: linear-gradient(135deg, rgba(0, 188, 212, 0.06), rgba(0, 229, 255, 0.03));
+            border: 1px solid rgba(0, 188, 212, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .sign-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .sign-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .sign-input {
+            width: 100%;
+            max-width: 320px;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 18px;
+            font-family: 'Outfit', sans-serif;
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+
+        .sign-input:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px var(--cyan-glow);
+        }
+
+        .sign-consent {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            text-align: left;
+            max-width: 440px;
+            margin: 0 auto 20px;
+        }
+
+        .sign-consent input[type="checkbox"] {
+            margin-top: 3px;
+            accent-color: var(--cyan);
+            width: 18px;
+            height: 18px;
+        }
+
+        .sign-consent label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .btn-sign {
+            padding: 14px 40px;
+            background: linear-gradient(135deg, var(--green), #66BB6A);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-sign:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px var(--green-glow);
+        }
+
+        .btn-sign:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .signed-badge {
+            display: none;
+            padding: 16px;
+            background: var(--green-glow);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 10px;
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* ═══ FEES ═══ */
+        .fees-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0 0;
+            border-top: 2px solid var(--border);
+            margin-top: 8px;
+        }
+
+        .fees-total-label { font-weight: 700; font-size: 15px; }
+        .fees-total-value { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 18px; color: var(--cyan); }
+
+        /* ═══ LOADING SPINNER ═══ */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ═══ FOOTER ═══ */
+        .footer {
+            text-align: center;
+            padding: 32px 24px;
+            color: var(--text-muted);
+            font-size: 12px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .footer a { color: var(--cyan); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        /* ═══ RESPONSIVE ═══ */
+        @media (max-width: 640px) {
+            .login-card { padding: 36px 24px; }
+            .status-grid { grid-template-columns: 1fr 1fr; }
+            .header-subtitle { display: none; }
+            .welcome-text { font-size: 18px; }
+            .section-body { padding: 16px; }
+            .message-bubble { max-width: 85%; }
+        }
+
+        @media (max-width: 400px) {
+            .status-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ═══ SCROLLBAR ═══ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-brand">
+            <div class="header-logo">W</div>
+            <div>
+                <div class="header-title"><span>IntelliWarrior</span> Client Connect</div>
+                <div class="header-subtitle">Secure Client Portal &mdash; Powered by Warrior Tax Pro Elite</div>
+            </div>
+        </div>
+        <div class="header-user" id="headerUser" style="display:none;">
+            <div class="avatar" id="userAvatar">--</div>
+            <span id="userName">Client</span>
+            <button class="btn-logout" onclick="logout()">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-card">
+            <div class="login-icon" style="font-size:22px; font-weight:800; color:#0D1117;">IW</div>
+            <div class="login-title">IntelliWarrior Client Connect</div>
+            <div class="login-desc">Access your tax return status, documents, and messages securely.</div>
+
+            <div class="login-error" id="loginError">Invalid credentials. Please check your last name and last 4 digits of your SSN.</div>
+
+            <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-input" id="inputLastName" placeholder="Enter your last name" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Last 4 of SSN</label>
+                <input type="text" class="form-input" id="inputSSN4" placeholder="1234" maxlength="4" inputmode="numeric" style="text-transform: none; letter-spacing: 8px; text-align: center;">
+            </div>
+            <button class="btn-primary" id="btnLogin" onclick="doLogin()">Sign In</button>
+
+            <div class="login-footer">
+                Your information is encrypted and secure.<br>
+                Powered by <strong>Warrior Tax Pro Elite</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD (hidden until login) -->
+    <div class="dashboard" id="dashboardScreen">
+
+        <!-- Welcome -->
+        <div class="welcome-banner">
+            <div class="welcome-text">Welcome back, <span id="welcomeName">Client</span></div>
+            <div class="welcome-sub">Here's the latest on your <span id="taxYearLabel">2025</span> tax return.</div>
+        </div>
+
+        <!-- Status Cards -->
+        <div class="status-grid">
+            <div class="status-card">
+                <div class="status-card-label">Federal Status</div>
+                <div id="fedStatusBadge"></div>
+                <div class="status-card-detail" id="fedStatusDetail">Updated today</div>
+            </div>
+            <div class="status-card">
+                <div class="status-card-label">Federal Refund</div>
+                <div class="status-card-value green" id="fedRefundAmt">$0</div>
+                <div class="status-card-detail">Estimated amount</div>
+            </div>
+            <div class="status-card">
+                <div class="status-card-label">State Status</div>
+                <div id="stateStatusBadge"></div>
+                <div class="status-card-detail" id="stateStatusDetail">--</div>
+            </div>
+            <div class="status-card">
+                <div class="status-card-label">State Refund</div>
+                <div class="status-card-value green" id="stateRefundAmt">$0</div>
+                <div class="status-card-detail">Estimated amount</div>
+            </div>
+        </div>
+
+        <!-- Return Details -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title"><span class="section-icon">📋</span> Return Details</div>
+            </div>
+            <div class="section-body">
+                <div class="detail-row">
+                    <span class="detail-label">Filing Status</span>
+                    <span class="detail-value" id="filingStatus">--</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tax Year</span>
+                    <span class="detail-value" id="taxYear">2025</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Last Updated</span>
+                    <span class="detail-value" id="lastUpdated">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fees & Billing -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title"><span class="section-icon">💰</span> Fees & Billing</div>
+            </div>
+            <div class="section-body">
+                <div class="detail-row">
+                    <span class="detail-label">Preparation Fee</span>
+                    <span class="detail-value money" id="prepFee">$0</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Amount Paid</span>
+                    <span class="detail-value money" id="amtPaid">$0</span>
+                </div>
+                <div class="fees-total">
+                    <span class="fees-total-label">Balance Due</span>
+                    <span class="fees-total-value" id="balanceDue">$0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- E-File Authorization (Form 8879) -->
+        <div class="section" id="signSection">
+            <div class="section-header">
+                <div class="section-title"><span class="section-icon">✍️</span> E-File Authorization (Form 8879)</div>
+            </div>
+            <div class="section-body">
+                <div class="sign-section" id="signForm">
+                    <div class="sign-title">Sign Your E-File Authorization</div>
+                    <div class="sign-desc">
+                        By typing your name below and clicking "Sign", you authorize the electronic filing of your tax return with the IRS. This is equivalent to signing Form 8879.
+                    </div>
+                    <input type="text" class="sign-input" id="signatureInput" placeholder="Type your full name">
+                    <div class="sign-consent">
+                        <input type="checkbox" id="signConsent">
+                        <label for="signConsent">I consent to the electronic filing of my tax return and authorize my tax preparer to submit this return to the IRS on my behalf. I understand this constitutes my electronic signature on Form 8879.</label>
+                    </div>
+                    <button class="btn-sign" id="btnSign" onclick="signReturn()" disabled>Sign & Authorize</button>
+                </div>
+                <div class="signed-badge" id="signedBadge">
+                    ✅ E-File Authorization Signed — <span id="signedDate"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title"><span class="section-icon">💬</span> Messages</div>
+            </div>
+            <div class="messages-container" id="messagesContainer">
+                <div style="text-align:center; color:var(--text-muted); padding: 24px; font-size: 14px;">
+                    No messages yet. Send a message to your tax preparer below.
+                </div>
+            </div>
+            <div class="message-input-row">
+                <input type="text" class="message-input" id="messageInput" placeholder="Type a message to your preparer..." onkeypress="if(event.key==='Enter')sendMessage()">
+                <button class="btn-send" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title"><span class="section-icon">📄</span> Documents</div>
+            </div>
+            <div class="section-body" id="documentsContainer">
+                <div style="text-align:center; color:var(--text-muted); padding: 16px; font-size: 14px;">
+                    No documents available yet.
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            IntelliWarrior Client Connect &copy; 2026 &mdash; <a href="https://warriortaxservice.com">Warrior Tax Pro Elite</a><br>
+            Your data is encrypted and secure. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════
+        // CONFIGURATION
+        // ═══════════════════════════════════════════════
+        const API_BASE = 'https://api.warriortaxservice.com';
+        let portalToken = null;
+        let clientName = '';
+
+        // ═══════════════════════════════════════════════
+        // LOGIN
+        // ═══════════════════════════════════════════════
+        async function doLogin() {
+            const lastName = document.getElementById('inputLastName').value.trim();
+            const ssn4 = document.getElementById('inputSSN4').value.trim();
+
+            if (!lastName || ssn4.length !== 4) {
+                showError('Please enter your last name and last 4 digits of your SSN.');
+                return;
+            }
+
+            const btn = document.getElementById('btnLogin');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Signing In...';
+            hideError();
+
+            try {
+                const res = await fetch(`${API_BASE}/api/portal/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lastName: lastName, ssnLast4: ssn4 })
+                });
+
+                if (!res.ok) {
+                    showError('Invalid credentials. Please check your last name and last 4 digits of your SSN.');
+                    btn.disabled = false;
+                    btn.textContent = 'Sign In';
+                    return;
+                }
+
+                const data = await res.json();
+                portalToken = data.token;
+                clientName = data.clientName || lastName;
+
+                sessionStorage.setItem('portalToken', portalToken);
+                sessionStorage.setItem('clientName', clientName);
+
+                showDashboard();
+            } catch (err) {
+                showError('Unable to connect. Please try again later.');
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
+            }
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('loginError');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        // ═══════════════════════════════════════════════
+        // DASHBOARD
+        // ═══════════════════════════════════════════════
+        async function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboardScreen').style.display = 'block';
+            document.getElementById('headerUser').style.display = 'flex';
+
+            const initials = clientName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            document.getElementById('userAvatar').textContent = initials;
+            document.getElementById('userName').textContent = clientName;
+            document.getElementById('welcomeName').textContent = clientName.split(' ')[0];
+
+            await loadStatus();
+            await loadMessages();
+            await loadDocuments();
+        }
+
+        // ═══════════════════════════════════════════════
+        // LOAD STATUS
+        // ═══════════════════════════════════════════════
+        async function loadStatus() {
+            try {
+                const res = await fetch(`${API_BASE}/api/portal/status?token=${portalToken}`);
+                if (!res.ok) return;
+                const data = await res.json();
+
+                document.getElementById('fedStatusBadge').innerHTML = makeBadge(data.federalStatus || data.status);
+                document.getElementById('stateStatusBadge').innerHTML = makeBadge(data.stateStatus || 'N/A');
+                document.getElementById('fedRefundAmt').textContent = formatMoney(data.federalRefund);
+                document.getElementById('stateRefundAmt').textContent = formatMoney(data.stateRefund);
+                document.getElementById('filingStatus').textContent = data.filingStatus || '--';
+                document.getElementById('taxYear').textContent = data.taxYear || '2025';
+                document.getElementById('taxYearLabel').textContent = data.taxYear || '2025';
+                document.getElementById('lastUpdated').textContent = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString() : '--';
+                document.getElementById('prepFee').textContent = formatMoney(data.preparationFee);
+                document.getElementById('amtPaid').textContent = formatMoney(data.amountPaid);
+                document.getElementById('balanceDue').textContent = formatMoney(data.balanceDue);
+
+                // Check if 8879 is already signed
+                if (data.form8879SignedAt) {
+                    document.getElementById('signForm').style.display = 'none';
+                    document.getElementById('signedBadge').style.display = 'block';
+                    document.getElementById('signedDate').textContent = new Date(data.form8879SignedAt).toLocaleString();
+                }
+            } catch (err) {
+                console.error('Failed to load status:', err);
+            }
+        }
+
+        function makeBadge(status) {
+            const s = (status || '').toLowerCase();
+            let cls = 'badge-progress';
+            if (s === 'accepted') cls = 'badge-accepted';
+            else if (s === 'ready' || s === 'transmitted') cls = 'badge-ready';
+            else if (s === 'rejected') cls = 'badge-rejected';
+            return `<div class="badge ${cls}" style="margin-top:8px;"><span class="badge-dot"></span>${status || 'In Progress'}</div>`;
+        }
+
+        // ═══════════════════════════════════════════════
+        // MESSAGES
+        // ═══════════════════════════════════════════════
+        async function loadMessages() {
+            try {
+                const res = await fetch(`${API_BASE}/api/portal/messages?token=${portalToken}`);
+                if (!res.ok) return;
+                const messages = await res.json();
+
+                const container = document.getElementById('messagesContainer');
+                if (messages.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding: 24px; font-size: 14px;">No messages yet. Send a message to your tax preparer below.</div>';
+                    return;
+                }
+
+                container.innerHTML = messages.map(m => `
+                    <div class="message from-${m.senderType.toLowerCase()}">
+                        <div class="message-avatar">${m.senderType === 'Client' ? '👤' : '💼'}</div>
+                        <div>
+                            <div class="message-bubble">${escapeHtml(m.messageText)}</div>
+                            <div class="message-time">${new Date(m.sentAt).toLocaleString()}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                container.scrollTop = container.scrollHeight;
+            } catch (err) {
+                console.error('Failed to load messages:', err);
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            try {
+                await fetch(`${API_BASE}/api/portal/messages?token=${portalToken}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                input.value = '';
+                await loadMessages();
+            } catch (err) {
+                console.error('Failed to send message:', err);
+            }
+        }
+
+        // ═══════════════════════════════════════════════
+        // DOCUMENTS
+        // ═══════════════════════════════════════════════
+        async function loadDocuments() {
+            try {
+                const res = await fetch(`${API_BASE}/api/portal/documents?token=${portalToken}`);
+                if (!res.ok) return;
+                const docs = await res.json();
+
+                const container = document.getElementById('documentsContainer');
+                if (docs.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding: 16px; font-size: 14px;">No documents available yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = docs.map(d => `
+                    <div class="doc-item">
+                        <div class="doc-info">
+                            <div class="doc-icon">📄</div>
+                            <div>
+                                <div class="doc-name">${escapeHtml(d.fileName)}</div>
+                                <div class="doc-date">${d.documentType || 'Document'} — ${new Date(d.uploadedAt).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                        <button class="btn-download">Download</button>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Failed to load documents:', err);
+            }
+        }
+
+        // ═══════════════════════════════════════════════
+        // SIGN 8879
+        // ═══════════════════════════════════════════════
+        document.getElementById('signConsent').addEventListener('change', updateSignButton);
+        document.getElementById('signatureInput').addEventListener('input', updateSignButton);
+
+        function updateSignButton() {
+            const name = document.getElementById('signatureInput').value.trim();
+            const consent = document.getElementById('signConsent').checked;
+            document.getElementById('btnSign').disabled = !(name.length >= 2 && consent);
+        }
+
+        async function signReturn() {
+            const name = document.getElementById('signatureInput').value.trim();
+            const btn = document.getElementById('btnSign');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Signing...';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/portal/sign-8879?token=${portalToken}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        signatureText: name,
+                        ipAddress: 'client-portal'
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('signForm').style.display = 'none';
+                    document.getElementById('signedBadge').style.display = 'block';
+                    document.getElementById('signedDate').textContent = new Date(data.signedAt).toLocaleString();
+                }
+            } catch (err) {
+                console.error('Failed to sign:', err);
+                btn.disabled = false;
+                btn.textContent = 'Sign & Authorize';
+            }
+        }
+
+        // ═══════════════════════════════════════════════
+        // UTILITIES
+        // ═══════════════════════════════════════════════
+        function formatMoney(val) {
+            const num = parseFloat(val) || 0;
+            return '$' + Math.round(num).toLocaleString();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function logout() {
+            portalToken = null;
+            sessionStorage.clear();
+            document.getElementById('loginScreen').style.display = '';
+            document.getElementById('dashboardScreen').style.display = 'none';
+            document.getElementById('headerUser').style.display = 'none';
+            document.getElementById('inputLastName').value = '';
+            document.getElementById('inputSSN4').value = '';
+        }
+
+        // Auto-restore session
+        (function() {
+            const saved = sessionStorage.getItem('portalToken');
+            if (saved) {
+                portalToken = saved;
+                clientName = sessionStorage.getItem('clientName') || 'Client';
+                showDashboard();
+            }
+        })();
+    </script>
+</body>
+</html>
