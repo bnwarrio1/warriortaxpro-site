@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Consent Flow | Warrior Tax Pro Elite</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0D1117;
+            color: #C9D1D9;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0D1117 0%, #161B22 100%);
+            border-bottom: 1px solid #30363D;
+            padding: 20px 0;
+        }
+        
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00E5FF;
+        }
+        
+        .logo-sub {
+            font-size: 12px;
+            color: #8B949E;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #8B949E;
+            margin-bottom: 40px;
+        }
+        
+        .section {
+            background: #161B22;
+            border: 1px solid #30363D;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+        
+        .section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00E5FF;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section h2 .num {
+            background: #00BCD4;
+            color: #0D1117;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        p { margin-bottom: 12px; }
+        
+        .highlight {
+            background: #1C2333;
+            border-left: 3px solid #00BCD4;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        
+        .verbal-script {
+            background: #1C2333;
+            border: 1px solid #30363D;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+            font-style: italic;
+            color: #E6EDF3;
+        }
+        
+        .verbal-script::before {
+            content: "VERBAL CONSENT SCRIPT:";
+            display: block;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 12px;
+            color: #00BCD4;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        /* Software mockup */
+        .mockup-container {
+            background: #0D1117;
+            border: 2px solid #30363D;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .mockup-titlebar {
+            background: #161B22;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #30363D;
+        }
+        
+        .mockup-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .mockup-dot.red { background: #F85149; }
+        .mockup-dot.yellow { background: #D29922; }
+        .mockup-dot.green { background: #3FB950; }
+        
+        .mockup-title {
+            margin-left: 8px;
+            font-size: 13px;
+            color: #8B949E;
+        }
+        
+        .mockup-body {
+            padding: 24px;
+        }
+        
+        .mockup-section-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #00E5FF;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #21262D;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .form-field {
+            flex: 1;
+        }
+        
+        .form-field label {
+            display: block;
+            font-size: 12px;
+            color: #8B949E;
+            margin-bottom: 4px;
+        }
+        
+        .form-field input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0D1117;
+            border: 1px solid #30363D;
+            border-radius: 6px;
+            color: #C9D1D9;
+            font-size: 14px;
+        }
+        
+        .consent-section {
+            background: #1C2333;
+            border: 1px solid #30363D;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        
+        .consent-section .consent-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #F0F6FC;
+            margin-bottom: 12px;
+        }
+        
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-row input[type="checkbox"] {
+            margin-top: 3px;
+            width: 16px;
+            height: 16px;
+            accent-color: #00BCD4;
+        }
+        
+        .checkbox-row label {
+            font-size: 13px;
+            color: #C9D1D9;
+        }
+        
+        .disclosure-text {
+            font-size: 11px;
+            color: #8B949E;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #30363D;
+        }
+        
+        .timestamp-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #3FB950;
+        }
+        
+        .annotation {
+            background: #F85149;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        
+        .annotation.green { background: #3FB950; color: #0D1117; }
+        .annotation.cyan { background: #00BCD4; color: #0D1117; }
+        
+        .links {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .links a {
+            color: #00BCD4;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .links a:hover { text-decoration: underline; }
+        
+        .badge {
+            display: inline-block;
+            background: #1C2333;
+            border: 1px solid #30363D;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #8B949E;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #484F58;
+            font-size: 13px;
+            border-top: 1px solid #21262D;
+        }
+        
+        .footer a { color: #00BCD4; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-inner">
+        <div>
+            <div class="logo-text">Warrior Tax Pro Elite</div>
+            <div class="logo-sub">by Warrior Financial Services LLC &bull; Chicago, IL</div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h1>SMS Consent Collection Flow</h1>
+    <p class="subtitle">This page documents how Warrior Tax Pro Elite collects SMS consent from tax clients. Our software is a professional desktop application used by licensed tax preparers. Consent is collected in-person during client intake.</p>
+
+    <!-- Section 1: Overview -->
+    <div class="section">
+        <h2><span class="num">1</span> Program Overview</h2>
+        <p><strong>Program Name:</strong> Warrior Tax Pro Elite Notifications</p>
+        <p><strong>Business:</strong> Warrior Financial Services LLC, 6127 S University Suite 1217, Chicago, IL 60637</p>
+        <p><strong>Phone:</strong> (773) 827-1858</p>
+        <p><strong>Message Types:</strong> Secure document upload links, tax return status notifications (accepted/rejected/refund updates), and appointment reminders.</p>
+        <p><strong>Message Frequency:</strong> Message frequency varies. Typical clients receive 2-10 messages per tax season.</p>
+        <p><strong>Opt-Out:</strong> Reply STOP to any message at any time.</p>
+        <p><strong>Data Sharing:</strong> No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. Mobile opt-in data and consent is not shared with any third parties.</p>
+    </div>
+
+    <!-- Section 2: Verbal Consent Script -->
+    <div class="section">
+        <h2><span class="num">2</span> Verbal Consent Collection (In-Person)</h2>
+        <p>Consent is collected in-person at our tax preparation office. The licensed tax preparer verbally explains the SMS messaging program to the client before checking the consent boxes in the software. The following script is used:</p>
+        
+        <div class="verbal-script">
+            "As part of our tax preparation service, we can send you text messages to your cell phone. These texts will include secure links to upload your tax documents, and notifications about the status of your tax return — for example, when it's been accepted or rejected by the IRS. You'll typically receive 2 to 10 messages during tax season. Message and data rates may apply. You can opt out at any time by replying STOP to any message. Would you like to receive text message notifications?"
+        </div>
+        
+        <p>Only after the client verbally agrees does the preparer check the consent checkboxes in the software. If the client declines, the checkboxes remain unchecked and no SMS messages are sent.</p>
+    </div>
+
+    <!-- Section 3: Software Screenshot / Mockup -->
+    <div class="section">
+        <h2><span class="num">3</span> Software Consent Interface (Desktop Application)</h2>
+        <p>Below is a representation of the consent collection screen within Warrior Tax Pro Elite. This appears on the Taxpayer Info tab during client intake. All checkboxes are unchecked by default.</p>
+        
+        <div class="mockup-container">
+            <div class="mockup-titlebar">
+                <span class="mockup-dot red"></span>
+                <span class="mockup-dot yellow"></span>
+                <span class="mockup-dot green"></span>
+                <span class="mockup-title">Warrior Tax Pro Elite — Tax Return — Taxpayer Info Tab</span>
+            </div>
+            <div class="mockup-body">
+                <div class="mockup-section-label">Client Contact Information</div>
+                
+                <div class="form-row">
+                    <div class="form-field">
+                        <label>First Name</label>
+                        <input type="text" value="John" readonly>
+                    </div>
+                    <div class="form-field">
+                        <label>Last Name</label>
+                        <input type="text" value="Smith" readonly>
+                    </div>
+                    <div class="form-field">
+                        <label>Cell Phone</label>
+                        <input type="text" value="(312) 555-0147" readonly>
+                    </div>
+                    <div class="form-field">
+                        <label>Email</label>
+                        <input type="text" value="john.smith@email.com" readonly>
+                    </div>
+                </div>
+                
+                <div class="consent-section">
+                    <div class="consent-title">SMS Text Message Consent</div>
+                    <span class="annotation cyan">UNCHECKED BY DEFAULT</span>
+                    
+                    <div class="checkbox-row">
+                        <input type="checkbox" id="c1">
+                        <label for="c1">Client consents to receive text messages from Warrior Tax Pro Elite</label>
+                    </div>
+                    <div class="checkbox-row">
+                        <input type="checkbox" id="c2">
+                        <label for="c2">Client consents to receive IntelliWarrior document upload links via text</label>
+                    </div>
+                    <div class="checkbox-row">
+                        <input type="checkbox" id="c3">
+                        <label for="c3">Client consents to receive tax return status notifications (accepted/rejected/refund) via text</label>
+                    </div>
+                    
+                    <div class="disclosure-text">
+                        Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to cancel. 
+                        <a href="https://bnwarrio1.github.io/warriortaxpro-site/privacy-policy.html" style="color: #00BCD4;">Privacy Policy</a> | 
+                        <a href="https://bnwarrio1.github.io/warriortaxpro-site/terms.html" style="color: #00BCD4;">Terms of Service</a>
+                    </div>
+                    
+                    <div class="timestamp-row">
+                        &#x2714; Consent timestamp recorded: 2026-01-15 10:32:45 AM CST
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight">
+            <strong>Key compliance points:</strong><br>
+            &bull; All three checkboxes are unchecked by default — the tax preparer manually checks them only after the client gives verbal consent.<br>
+            &bull; Consent is optional — it is not required to complete the tax return.<br>
+            &bull; A timestamp is automatically recorded when any checkbox is checked.<br>
+            &bull; The disclosure text ("Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to cancel.") is displayed at all times next to the checkboxes.<br>
+            &bull; Links to Privacy Policy and Terms of Service are visible on the consent interface.<br>
+            &bull; No messages are sent until the preparer actively triggers a notification for that client.
+        </div>
+    </div>
+
+    <!-- Section 4: Opt-In Confirmation -->
+    <div class="section">
+        <h2><span class="num">4</span> Opt-In Confirmation Message</h2>
+        <p>When a client is opted in and their first message is sent, they receive this confirmation:</p>
+        <div class="highlight">
+            Warrior Tax Pro: You have been opted in to receive text messages from Warrior Financial Services LLC regarding your tax return. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to cancel. Privacy Policy: https://bnwarrio1.github.io/warriortaxpro-site/privacy-policy.html
+        </div>
+    </div>
+
+    <!-- Section 5: Sample Messages -->
+    <div class="section">
+        <h2><span class="num">5</span> Sample Messages</h2>
+        
+        <div class="highlight">
+            <span class="annotation green">DOCUMENT REQUEST</span><br>
+            Warrior Tax Pro: Your tax preparer has requested your documents. Please upload your W-2s and ID securely here: https://warriortaxpro.com/upload/a1b2c3 This link expires in 7 days. Reply STOP to opt out.
+        </div>
+        
+        <div class="highlight">
+            <span class="annotation green">STATUS NOTIFICATION</span><br>
+            Warrior Tax Pro: Your federal tax return has been accepted by the IRS. Contact your preparer at (773) 827-1858 with any questions. Reply STOP to opt out.
+        </div>
+    </div>
+
+    <!-- Section 6: Opt-Out -->
+    <div class="section">
+        <h2><span class="num">6</span> Opt-Out &amp; Help</h2>
+        <p><strong>Opt-Out:</strong> Clients can reply STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT, OPTOUT, or REVOKE to any message to immediately stop receiving texts.</p>
+        <p><strong>Opt-Out Confirmation:</strong> "You have successfully been unsubscribed. You will not receive any more messages from this number. Reply START to resubscribe."</p>
+        <p><strong>Help:</strong> Clients can reply HELP or INFO for assistance.</p>
+        <p><strong>Help Response:</strong> "Reply STOP to unsubscribe. Msg&amp;Data Rates May Apply."</p>
+    </div>
+
+    <!-- Section 7: Links -->
+    <div class="section">
+        <h2><span class="num">7</span> Compliance Documentation</h2>
+        <div class="links">
+            <a href="https://bnwarrio1.github.io/warriortaxpro-site/privacy-policy.html">Privacy Policy</a>
+            <a href="https://bnwarrio1.github.io/warriortaxpro-site/terms.html">Terms &amp; Conditions</a>
+            <a href="https://warriortaxpro.com">Company Website</a>
+        </div>
+        <p style="margin-top: 16px;"><strong>Business Contact:</strong> Warrior Financial Services LLC, (773) 827-1858, info@warriortaxpro.com</p>
+        <p><strong>Data Sharing Policy:</strong> No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. Mobile opt-in data and consent is not shared with any third parties.</p>
+    </div>
+</div>
+
+<div class="footer">
+    &copy; 2026 Warrior Financial Services LLC. All rights reserved. | 
+    <a href="https://bnwarrio1.github.io/warriortaxpro-site/privacy-policy.html">Privacy Policy</a> | 
+    <a href="https://bnwarrio1.github.io/warriortaxpro-site/terms.html">Terms &amp; Conditions</a>
+</div>
+
+</body>
+</html>
