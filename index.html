@@ -2,8 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=1440" />
-<title>Warrior Tax Pro Elite — Professional tax software, rebuilt.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Professional tax preparation software for independent EROs and growing practices. All 50 states, unlimited returns, AI due diligence, and IntelliWarrior client intake. 2026 filing season now enrolling." />
+<meta name="theme-color" content="#060B14" />
+<meta property="og:title" content="Warrior Tax Pro Elite — Professional tax software, rebuilt." />
+<meta property="og:description" content="Professional tax preparation software for independent EROs. Built by a licensed tax professional. All 50 states, unlimited returns, AI-powered due diligence." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://warriortaxpro.com" />
+<meta name="twitter:card" content="summary_large_image" />
+<title>Warrior Tax Pro Elite | Professional Tax Preparation Software for EROs</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -282,91 +289,6 @@
 
   /* ======= PRINT ======= */
   @page{size:A4 portrait;margin:10mm}
-  @media print{
-    *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
-    html,body{background:#060B14!important;width:100%;overflow:visible!important}
-    body{background:linear-gradient(180deg,#060B14 0%,#0A1220 100%)!important;background-attachment:initial!important}
-    body::before{content:"";position:fixed;inset:0;background:
-      radial-gradient(1200px 700px at 85% -5%, rgba(56,189,248,0.10), transparent 60%),
-      radial-gradient(900px 500px at 0% 30%, rgba(94,234,212,0.06), transparent 60%),
-      radial-gradient(800px 500px at 100% 70%, rgba(129,140,248,0.06), transparent 60%);
-      pointer-events:none;z-index:-1}
-
-    /* everything visible — kill reveal animation */
-    .reveal{opacity:1!important;transform:none!important}
-
-    /* nav: un-fix so it flows with page */
-    .nav{position:static!important;background:rgba(10,14,15,0.8)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-
-    .wrap{max-width:none;padding:0 8mm}
-
-    /* section-level page breaks */
-    .hero{padding:30px 0 40px;break-after:page;page-break-after:always}
-    .trust{break-inside:avoid}
-    .stats{padding:30px 0 20px;break-before:page;page-break-before:always;break-after:page;page-break-after:always}
-    .features{padding:30px 0 20px;break-before:page;page-break-before:always;break-after:page;page-break-after:always}
-    .built{padding:30px 0;break-before:page;page-break-before:always;break-after:page;page-break-after:always}
-    .pricing{padding:30px 0;break-before:page;page-break-before:always;break-after:page;page-break-after:always}
-    .closing{padding:30px 0 30px;break-before:page;page-break-before:always;break-after:page;page-break-after:always}
-    footer{break-before:page;page-break-before:always;padding:20px 0 16px}
-
-    /* avoid splitting cards */
-    .stat,.feat,.pcard,.quote-card,.close-card,.mock,.refund-card,.checklist li{break-inside:avoid;page-break-inside:avoid}
-
-    /* layout tweaks so it fits portrait */
-    .hero-grid{grid-template-columns:1fr 1fr;gap:28px}
-    .hero h1{font-size:44px;margin:18px 0 16px}
-    .hero p.lede{font-size:14px;margin-bottom:22px}
-    .hero-meta{margin-top:24px;padding-top:18px;gap:18px}
-    .hero-meta .m b{font-size:18px}
-
-    .refund-amt{font-size:38px}
-
-    .sec-h{font-size:30px}
-    .sec-sub{font-size:14px}
-    .stats-head,.feat-head{margin-bottom:24px;gap:24px}
-
-    .stats-grid{grid-template-columns:repeat(4,1fr)}
-    .stat{padding:22px 18px}
-    .stat .big{font-size:44px}
-    .stat .big .suf{font-size:16px}
-    .stat .desc{font-size:12px;margin-top:12px}
-
-    .feat-grid{grid-template-columns:repeat(3,1fr)}
-    .feat{padding:22px 20px;min-height:0}
-    .feat h3{font-size:17px}
-    .feat p{font-size:12px}
-
-    .built-grid{grid-template-columns:1fr 1fr;gap:36px}
-    .quote-card{padding:28px 26px}
-    .quote-card blockquote{font-size:18px}
-    .quote-mark{font-size:54px;margin-bottom:-8px}
-    .checklist li{padding-bottom:12px}
-    .checklist b{font-size:14px}
-    .checklist span{font-size:12px}
-
-    .price-grid{grid-template-columns:repeat(3,1fr);gap:12px}
-    .pcard{padding:26px 22px}
-    .pcard h3{font-size:16px;min-height:0;margin-bottom:10px}
-    .price{padding:16px 0 18px;margin-bottom:18px}
-    .price .amt{font-size:40px}
-    .pfeats{gap:8px;margin-bottom:20px}
-    .pfeats li{font-size:12px}
-
-    .close-card{padding:44px 40px 38px}
-    .close-card h2{font-size:34px}
-    .close-card .sub{font-size:14px;margin-bottom:24px}
-    .contact-row .ci{padding:0 20px}
-
-    .foot-grid{gap:24px;margin-bottom:28px}
-
-    /* strip hover & transitions */
-    *,*::before,*::after{transition:none!important;animation:none!important}
-
-    /* links: keep color, hide underlines */
-    a{text-decoration:none!important}
-  }
-
   /* responsive (light) */
   @media (max-width:1200px){
     .hero h1{font-size:62px}
@@ -755,10 +677,10 @@
       <h2>Ready to run your practice on software that <em>respects your craft?</em></h2>
       <p class="sub">Thirty-minute demo on Zoom with a licensed preparer, not a sales engineer. We'll walk your actual workflow — not a canned deck.</p>
       <div class="close-ctas">
-        <a class="btn-primary" href="/cdn-cgi/l/email-protection#bfd6d1d9d0ffc8decdcdd6d0cdcbdec7cfcdd091dcd0d2"><span class="__cf_email__" data-cfemail="21484f474e6156405353484e5355405951534e0f424e4c">[email&#160;protected]</span> <span class="arr">→</span></a>
+        <a class="btn-primary" href="mailto:info@warriortaxpro.com">info@warriortaxpro.com <span class="arr">→</span></a>
       </div>
       <div class="contact-row">
-        <div class="ci"><span class="k">Email</span><span class="v"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2841464e47685f495a5a41475a5c4950585a47064b4745">[email&#160;protected]</a></span></div>
+        <div class="ci"><span class="k">Email</span><span class="v"><a href="mailto:info@warriortaxpro.com">info@warriortaxpro.com</a></span></div>
         <div class="ci"><span class="k">Support Hours</span><span class="v">Mon–Sat · 7a–10p CT</span></div>
       </div>
     </div>
@@ -779,44 +701,44 @@
       <div class="foot-col">
         <h4>Product</h4>
         <ul>
-          <li><a href="#">Platform overview</a></li>
-          <li><a href="#">Federal &amp; state coverage</a></li>
-          <li><a href="#">AI Due Diligence</a></li>
-          <li><a href="#">IntelliWarrior intake</a></li>
+          <li><a href="#platform">Platform overview</a></li>
+          <li><a href="#platform">Federal &amp; state coverage</a></li>
+          <li><a href="#capabilities">AI Due Diligence</a></li>
+          <li><a href="#capabilities">IntelliWarrior intake</a></li>
           <li><a href="#pricing">Pricing</a></li>
         </ul>
       </div>
       <div class="foot-col">
         <h4>Company</h4>
         <ul>
-          <li><a href="#">About Warrior</a></li>
-          <li><a href="#">Security &amp; Compliance</a></li>
+          <li><a href="#built">About Warrior</a></li>
+          <li><a href="mailto:info@warriortaxpro.com">Security &amp; Compliance</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
       <div class="foot-col">
         <h4>Support</h4>
         <ul>
-          <li><a href="#">Help Center</a></li>
-          <li><a href="#">Onboarding</a></li>
-          <li><a href="#">Migration assistance</a></li>
-          <li><a href="#">Contact support</a></li>
+          <li><a href="mailto:info@warriortaxpro.com">Help Center</a></li>
+          <li><a href="mailto:info@warriortaxpro.com">Onboarding</a></li>
+          <li><a href="mailto:info@warriortaxpro.com">Migration assistance</a></li>
+          <li><a href="mailto:info@warriortaxpro.com">Contact support</a></li>
         </ul>
       </div>
     </div>
     <div class="foot-bar">
       <span>© 2026 WARRIOR FINANCIAL SERVICES LLC · ALL RIGHTS RESERVED</span>
       <span class="legal">
-        <a href="#">PRIVACY POLICY</a>
-        <a href="#">TERMS OF SERVICE</a>
-        <a href="#">ACCESSIBILITY</a>
-        <a href="#">IRS E-FILE PROVIDER</a>
+        <a href="/privacy-policy.html">PRIVACY POLICY</a>
+        <a href="/terms.html">TERMS OF SERVICE</a>
+        <span>ACCESSIBILITY</span>
+        <span>IRS E-FILE PROVIDER</span>
       </span>
     </div>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script>
+<script>
   // smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
     a.addEventListener('click',e=>{
@@ -836,15 +758,6 @@
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   // Ensure everything is visible for print, regardless of scroll state
   document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
-</script>
-<script>
-  // Auto-print once fonts + layout are ready
-  (async () => {
-    try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-    await new Promise(r => setTimeout(r, 500));
-    window.print();
-  })();
 </script>
 </body>
 </html>
