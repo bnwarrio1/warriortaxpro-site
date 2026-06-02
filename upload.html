@@ -1262,7 +1262,7 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/intelliprep/session/${sessionToken}`);
+                const response = await fetch(`${API_BASE}/api/intelliwarrior/session/${sessionToken}`);
                 if (!response.ok) {
                     if (response.status === 404) {
                         showError('Link Not Found', 'This upload link was not found. It may have already been used or the link is incorrect.');
@@ -1458,7 +1458,7 @@
             // First, submit client info
             try {
                 const clientInfo = collectClientInfo();
-                await fetch(`${API_BASE}/api/intelliprep/client-info/${sessionToken}`, {
+                await fetch(`${API_BASE}/api/intelliwarrior/client-info/${sessionToken}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(clientInfo)
@@ -1476,7 +1476,7 @@
                         formData.append('category', category);
                         formData.append('token', sessionToken);
 
-                        const response = await fetch(`${API_BASE}/api/intelliprep/upload/${sessionToken}`, {
+                        const response = await fetch(`${API_BASE}/api/intelliwarrior/upload/${sessionToken}`, {
                             method: 'POST',
                             body: formData
                         });
