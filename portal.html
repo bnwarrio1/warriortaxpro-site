@@ -917,7 +917,7 @@
                     <button class="btn-sign" id="btnSign" onclick="signReturn()" disabled>Sign & Authorize</button>
                 </div>
                 <div class="signed-badge" id="signedBadge">
-                    ✅ E-File Authorization Signed — <span id="signedDate"></span>
+                    ✅ E-File Authorization Signed · <span id="signedDate"></span>
                 </div>
             </div>
         </div>
@@ -1150,7 +1150,7 @@
                             <div class="doc-icon">📄</div>
                             <div>
                                 <div class="doc-name">${escapeHtml(d.fileName)}</div>
-                                <div class="doc-date">${d.documentType || 'Document'} — ${new Date(d.uploadedAt).toLocaleDateString()}</div>
+                                <div class="doc-date">${d.documentType || 'Document'} · ${new Date(d.uploadedAt).toLocaleDateString()}</div>
                             </div>
                         </div>
                         <button class="btn-download">Download</button>

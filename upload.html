@@ -799,7 +799,7 @@
                          ondragleave="this.classList.remove('drag-over')"
                          ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'w2')">
                         <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">JPG, PNG, PDF — up to 10MB each</div>
+                        <div class="upload-zone-hint">JPG, PNG, PDF (up to 10MB each)</div>
                     </div>
                     <div class="upload-buttons">
                         <button class="upload-btn camera" onclick="capturePhoto('w2')">📷 Take Photo</button>
@@ -825,7 +825,7 @@
                          ondragleave="this.classList.remove('drag-over')"
                          ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'1099')">
                         <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">JPG, PNG, PDF — up to 10MB each</div>
+                        <div class="upload-zone-hint">JPG, PNG, PDF (up to 10MB each)</div>
                     </div>
                     <div class="upload-buttons">
                         <button class="upload-btn camera" onclick="capturePhoto('1099')">📷 Take Photo</button>
@@ -856,7 +856,7 @@
                          ondragleave="this.classList.remove('drag-over')"
                          ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'id')">
                         <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">Front and back — JPG, PNG, PDF</div>
+                        <div class="upload-zone-hint">Front and back (JPG, PNG, PDF)</div>
                     </div>
                     <div class="upload-buttons">
                         <button class="upload-btn camera" onclick="capturePhoto('id')">📷 Take Photo</button>
@@ -882,7 +882,7 @@
                          ondragleave="this.classList.remove('drag-over')"
                          ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'ssn')">
                         <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">JPG, PNG, PDF — up to 10MB each</div>
+                        <div class="upload-zone-hint">JPG, PNG, PDF (up to 10MB each)</div>
                     </div>
                     <div class="upload-buttons">
                         <button class="upload-btn camera" onclick="capturePhoto('ssn')">📷 Take Photo</button>
@@ -913,7 +913,7 @@
                          ondragleave="this.classList.remove('drag-over')"
                          ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'other')">
                         <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">JPG, PNG, PDF — up to 10MB each</div>
+                        <div class="upload-zone-hint">JPG, PNG, PDF (up to 10MB each)</div>
                     </div>
                     <div class="upload-buttons">
                         <button class="upload-btn camera" onclick="capturePhoto('other')">📷 Take Photo</button>
@@ -1510,7 +1510,7 @@
             }
 
             if (failed > 0 && uploaded === 0 && totalFiles > 0) {
-                btn.textContent = 'Upload Failed — Try Again';
+                btn.textContent = 'Upload Failed. Try Again';
                 btn.disabled = false;
                 alert('Unable to upload files. Please check your connection and try again.');
             } else {
