@@ -252,6 +252,11 @@
   .pcta:hover{background:var(--bg-2);border-color:var(--ink-3)}
   .pcard.featured .pcta{background:var(--grad);color:#05070c;border-color:transparent}
   .pcard.featured .pcta:hover{box-shadow:0 12px 32px -10px rgba(56,189,248,0.6)}
+  /* Colored CTAs for the non-featured tiers (each its own hue) */
+  .pcard.tier-starter .pcta{background:linear-gradient(135deg,#5EEAD4,#34D399);color:#05070c;border-color:transparent}
+  .pcard.tier-starter .pcta:hover{box-shadow:0 12px 32px -10px rgba(52,211,153,0.55)}
+  .pcard.tier-pro .pcta{background:linear-gradient(135deg,#38BDF8,#818CF8);color:#05070c;border-color:transparent}
+  .pcard.tier-pro .pcta:hover{box-shadow:0 12px 32px -10px rgba(129,140,248,0.55)}
 
   /* ======= CLOSING CTA ======= */
   .closing{padding:110px 0 120px}
@@ -613,7 +618,7 @@
     </div>
 
     <div class="price-grid">
-      <div class="pcard reveal">
+      <div class="pcard tier-starter reveal">
         <div class="ptop">
           <span class="pname">Warrior Starter</span>
         </div>
@@ -629,10 +634,10 @@
           <li><svg class="ck" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9l3.5 3.5L14 6"/></svg> AI Preparer Assistant</li>
           <li><svg class="ck" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9l3.5 3.5L14 6"/></svg> Email support</li>
         </ul>
-        <a class="pcta" href="#demo">Start with Starter</a>
+        <a class="pcta" href="#demo">Choose Starter</a>
       </div>
 
-      <div class="pcard reveal">
+      <div class="pcard tier-pro reveal">
         <div class="ptop">
           <span class="pname">Warrior Professional Plus</span>
         </div>
