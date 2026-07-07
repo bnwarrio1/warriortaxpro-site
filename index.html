@@ -185,6 +185,21 @@
   .stat .big .suf{font-size:22px;letter-spacing:-0.01em;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
   .stat .desc{margin-top:18px;color:var(--ink-3);font-size:13px;line-height:1.5}
 
+  /* ======= SCREENS ======= */
+  .screens{padding:96px 0 40px}
+  .screens-head{margin-bottom:44px;max-width:820px}
+  .shot-grid{display:grid;gap:22px}
+  .shot-grid .row2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .shot{border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#0F1624 0%,#0A1220 100%);box-shadow:0 40px 80px -34px rgba(0,0,0,0.7), 0 0 0 1px rgba(94,234,212,0.05), 0 0 60px -22px rgba(56,189,248,0.12)}
+  .shot-chrome{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--hair);background:rgba(10,18,32,0.6)}
+  .shot-chrome .ct{font-family:var(--mono);font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .shot-img{display:block;width:100%;height:auto;background:#0B1120}
+  .shot-cap{padding:16px 20px 18px;border-top:1px solid var(--hair);background:rgba(10,18,32,0.35)}
+  .shot-cap .cix{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:8px}
+  .shot-cap h3{font-family:var(--sans);font-weight:700;font-size:17px;letter-spacing:-0.02em;margin:0 0 6px;color:var(--ink)}
+  .shot-cap p{font-size:13px;line-height:1.55;color:var(--ink-2);margin:0}
+  @media(max-width:820px){.shot-grid .row2{grid-template-columns:1fr}}
+
   /* ======= FEATURES ======= */
   .features{padding:110px 0 40px}
   .feat-head{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:48px}
@@ -394,7 +409,7 @@
       <p class="lede">A desktop-first platform engineered for independent EROs and growing practices. Designed by a licensed tax professional who knew the category needed a serious redesign.</p>
       <div class="cta-row">
         <a class="btn-primary" href="waitlist.html">Join the Waitlist <span class="arr">→</span></a>
-        <a class="btn-ghost" href="#platform">See the Platform <span class="arr">→</span></a>
+        <a class="btn-ghost" href="#screens">See the Platform <span class="arr">→</span></a>
       </div>
       <div class="hero-meta">
         <div class="m"><b>FS&nbsp;2026</b>Enrollment open</div>
@@ -477,6 +492,48 @@
         <div class="top"><span class="idx">04 / INTELLIGENCE</span><span>→</span></div>
         <div class="big">AI<span class="suf">&nbsp;8867</span></div>
         <div class="desc">Due-diligence engine flags inconsistencies on EIC, CTC, AOTC, and HoH before you click e-file, not after the IRS does.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREENS ============ -->
+<section class="screens" id="screens">
+  <div class="wrap">
+    <div class="screens-head reveal">
+      <span class="sec-label">See It In Action</span>
+      <h2 class="sec-h">The actual software, <em class="it">not a marketing mockup</em>.</h2>
+      <p class="sec-sub">Real screens from Warrior Tax Pro Elite. Every taxpayer detail shown is sample data.</p>
+    </div>
+    <div class="shot-grid">
+      <div class="shot reveal">
+        <div class="shot-chrome"><div class="tl"><span></span><span></span><span></span></div><span class="ct">Warrior Tax Pro Elite — W-2 Wage &amp; Tax Statement</span></div>
+        <img class="shot-img" src="images/screen-w2-entry.png" alt="W-2 wage and tax statement entry with a live balance-due panel" loading="lazy" width="1920" height="1027">
+        <div class="shot-cap">
+          <span class="cix">01 / Return Entry</span>
+          <h3>Guided W-2 entry with a live balance</h3>
+          <p>Employer and wage fields with Social Security and Medicare auto-calculated from Box 1, and the balance due recomputing on the right as each figure is keyed.</p>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="shot reveal">
+          <div class="shot-chrome"><div class="tl"><span></span><span></span><span></span></div><span class="ct">IntelliWarrior — Review &amp; Import</span></div>
+          <img class="shot-img" src="images/screen-doc-intake.png" alt="IntelliWarrior document intake extracting W-2 boxes with confidence scores for review" loading="lazy" width="1915" height="987">
+          <div class="shot-cap">
+            <span class="cix">02 / IntelliWarrior Intake</span>
+            <h3>OCR that reads the whole form</h3>
+            <p>A client W-2 is parsed box by box with a confidence score on each field. Nothing posts to the return until the preparer reviews and clicks Confirm &amp; Import.</p>
+          </div>
+        </div>
+        <div class="shot reveal">
+          <div class="shot-chrome"><div class="tl"><span></span><span></span><span></span></div><span class="ct">Warrior Tax Pro Elite — Report an Issue</span></div>
+          <img class="shot-img" src="images/screen-report-issue.png" alt="In-app issue reporting form with app version and environment pre-filled" loading="lazy" width="1912" height="1027">
+          <div class="shot-cap">
+            <span class="cix">03 / Built-in Support</span>
+            <h3>Report an issue without leaving the app</h3>
+            <p>App version, Windows build, and preparer are attached automatically, with an optional screenshot, so support has full context from the first message.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
