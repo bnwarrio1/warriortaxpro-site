@@ -254,6 +254,7 @@
   .price-head .sec-label{justify-content:center}
   .price-head .sec-label::before{display:none}
   .price-head .sec-h{margin-left:auto;margin-right:auto}
+  .price-head .sec-sub{margin-left:auto;margin-right:auto}
   .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1180px;margin:0 auto}
   .pcard{padding:36px 30px 32px}
   .pcard h3{font-size:24px}
@@ -337,8 +338,8 @@
     .hero{padding:100px 0 60px}
     .hero-grid{grid-template-columns:1fr;gap:40px}
     .hero h1{font-size:52px;line-height:1.02}
-    .hero-lede{font-size:16px}
-    .hero-ctas{flex-wrap:wrap}
+    .hero p.lede{font-size:16px}
+    .cta-row{flex-wrap:wrap}
     .hero-meta{flex-wrap:wrap;gap:16px}
     .price-grid{grid-template-columns:1fr;gap:20px}
     .built-grid{grid-template-columns:1fr;gap:40px}
@@ -350,7 +351,7 @@
     .foot-grid{grid-template-columns:1fr 1fr;gap:32px}
     .close-card{padding:48px 28px}
     .close-card h2{font-size:34px}
-    .section-title{font-size:38px}
+    .sec-h{font-size:38px}
     .mock-body{padding:18px 18px 20px}
     .refund-big{font-size:42px}
     .data-row{font-size:12px;padding:10px 0}
@@ -360,18 +361,18 @@
   @media (max-width:480px){
     .wrap{padding:0 20px}
     .hero h1{font-size:40px;line-height:1.04}
-    .hero-lede{font-size:15px}
-    .hero-ctas{flex-direction:column;gap:10px;align-items:stretch}
+    .hero p.lede{font-size:15px}
+    .cta-row{flex-direction:column;gap:10px;align-items:stretch}
     .btn-primary,.btn-ghost{justify-content:center;width:100%}
     .stats-grid{grid-template-columns:1fr;gap:0}
-    .stat-cell{border-right:0;border-bottom:1px solid var(--hair)}
-    .section-title{font-size:30px}
+    .stat{border-right:0;border-bottom:1px solid var(--hair)}
+    .sec-h{font-size:30px}
     .close-card h2{font-size:26px}
     .close-card{padding:40px 20px}
     .foot-grid{grid-template-columns:1fr;gap:28px}
     .mock-title{font-size:9px}
     .refund-big{font-size:36px}
-    .price-card{padding:32px 24px}
+    .pcard{padding:32px 24px}
     .price-num{font-size:54px}
   }
 </style>
@@ -711,7 +712,8 @@
   <div class="wrap">
     <div class="price-head reveal">
       <span class="sec-label">Pricing</span>
-      <h2 class="sec-h">One flat license. <em class="it">Pay once for the season</em>. <br>No per-return meter on Pro plans.</h2>
+      <h2 class="sec-h">One flat license. <em class="it">Pay once for the season</em>, <br>or $0 upfront with Software Purchase Assistance.</h2>
+      <p class="sec-sub">No per-return meter on Pro plans. Financing provided by SBTPG. Subject to approval.</p>
     </div>
 
     <div class="price-grid">
