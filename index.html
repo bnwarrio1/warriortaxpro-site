@@ -93,7 +93,20 @@
      height. It CANNOT go lower: .nav is position:fixed and occupies 0-69, so
      a smaller value slides the emblem behind the nav bar and the translucent
      backdrop slices the top off the helmet. 84 leaves a 15px gap under it. */
-  .hero-emblem{display:block;width:160px;height:160px;margin:0;opacity:0.65;flex:0 0 auto}
+  /* Full strength plus a halo. Measured: ~48% of this artwork is darker than
+     L=64 and the hero background sits at L=12.8, so half the mark is opaque
+     near-black AT the page's own luminance. Opacity cannot lift those pixels
+     (they are already at full strength) and nothing behind them shows through
+     (they are opaque). The fix is SEPARATION, not brightness: the ring just
+     outside the mark goes from 0.8 BELOW the page to 1.2 ABOVE it.
+     drop-shadow follows the alpha channel, so the halo hugs the real silhouette
+     - box-shadow would trace the square box, and border-radius to round it would
+     clip the crossed swords. Two stops give the falloff; one stop reads hot.
+     DO NOT swap this for filter:brightness()/contrast(). That would lift the dark
+     shield, and it is the only thing that would - but it recolors the rendered
+     artwork. This mark is FIXED: a copy is with SBTPG and ours must match it. */
+  .hero-emblem{display:block;width:160px;height:160px;margin:0;opacity:1;flex:0 0 auto;
+    filter:drop-shadow(0 0 10px rgba(232,183,90,0.20)) drop-shadow(0 0 30px rgba(232,183,90,0.16))}
   /* The emblem and the season pill ride in ONE row, which is why the pill
      costs zero vertical space: it sits inside the emblem's 160px band.
      Stacked instead, it pushed the FS 2026 strip 14px below a 900px fold. */
@@ -374,9 +387,10 @@
 
   /* ============ MOBILE (Phones Small) ============ */
   @media (max-width:480px){
-    /* Size only. Opacity is deliberately NOT redeclared here: 0.65 is set once
-       on .hero-emblem and applies at every viewport, so there is no second
-       place for the two to drift apart.
+    /* Size only. Opacity and the halo are deliberately NOT redeclared here:
+       both are set once on .hero-emblem and apply at every viewport, so there
+       is no second place for them to drift apart. Verified at 84px - the halo
+       reads as ambient light at that size, not as a ring.
        SPECIFICITY: these overrides win ONLY because they are declared later in
        the file. A media query adds NOTHING to specificity - @media .x{} and a
        plain .x{} tie, and source order breaks the tie. This file has now been
