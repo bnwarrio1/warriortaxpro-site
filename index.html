@@ -93,7 +93,7 @@
      height. It CANNOT go lower: .nav is position:fixed and occupies 0-69, so
      a smaller value slides the emblem behind the nav bar and the translucent
      backdrop slices the top off the helmet. 84 leaves a 15px gap under it. */
-  .hero-emblem{display:block;width:160px;height:160px;margin:0;opacity:0.35;flex:0 0 auto}
+  .hero-emblem{display:block;width:160px;height:160px;margin:0;opacity:0.65;flex:0 0 auto}
   /* The emblem and the season pill ride in ONE row, which is why the pill
      costs zero vertical space: it sits inside the emblem's 160px band.
      Stacked instead, it pushed the FS 2026 strip 14px below a 900px fold. */
@@ -374,8 +374,9 @@
 
   /* ============ MOBILE (Phones Small) ============ */
   @media (max-width:480px){
-    /* Smaller, but LESS ghosted: at 84px a 35% mark reads as a smudge and does
-       not justify its vertical space on the tightest viewport.
+    /* Size only. Opacity is deliberately NOT redeclared here: 0.65 is set once
+       on .hero-emblem and applies at every viewport, so there is no second
+       place for the two to drift apart.
        SPECIFICITY: these overrides win ONLY because they are declared later in
        the file. A media query adds NOTHING to specificity - @media .x{} and a
        plain .x{} tie, and source order breaks the tie. This file has now been
@@ -383,7 +384,7 @@
        media query needs TWO classes (e.g. .hero-crest .eyebrow), because
        .eyebrow{display:inline-flex} is declared further down and would win a
        single-class fight regardless of the breakpoint. */
-    .hero-emblem{width:84px;height:84px;opacity:0.65}
+    .hero-emblem{width:84px;height:84px}
     .hero-crest{margin-bottom:12px}
     .wrap{padding:0 20px}
     .hero h1{font-size:40px;line-height:1.04}
