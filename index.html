@@ -85,7 +85,19 @@
   .btn-pill:hover .arr{transform:translateX(2px)}
 
   /* ======= HERO ======= */
-  .hero{padding:140px 0 100px;position:relative;overflow:hidden}
+  .hero{padding:84px 0 100px;position:relative;overflow:hidden}
+  /* Warrior lockup beside the season badge. Scaled and ghosted only - the
+     artwork is FIXED (a copy is with SBTPG) and must not be cropped or
+     recolored. 320px source for a 160px box = 2x on retina.
+     The hero's top padding was cut 140->84 to absorb most of this emblem's
+     height. It CANNOT go lower: .nav is position:fixed and occupies 0-69, so
+     a smaller value slides the emblem behind the nav bar and the translucent
+     backdrop slices the top off the helmet. 84 leaves a 15px gap under it. */
+  .hero-emblem{display:block;width:160px;height:160px;margin:0;opacity:0.35;flex:0 0 auto}
+  /* The emblem and the season pill ride in ONE row, which is why the pill
+     costs zero vertical space: it sits inside the emblem's 160px band.
+     Stacked instead, it pushed the FS 2026 strip 14px below a 900px fold. */
+  .hero-crest{display:flex;align-items:center;justify-content:center;gap:22px;margin:0 0 18px}
   .hero::before{content:"";position:absolute;inset:0;background:
     radial-gradient(800px 400px at 85% 10%, rgba(56,189,248,0.14), transparent 60%),
     radial-gradient(600px 350px at 10% 80%, rgba(94,234,212,0.08), transparent 60%);
@@ -362,6 +374,17 @@
 
   /* ============ MOBILE (Phones Small) ============ */
   @media (max-width:480px){
+    /* Smaller, but LESS ghosted: at 84px a 35% mark reads as a smudge and does
+       not justify its vertical space on the tightest viewport.
+       SPECIFICITY: these overrides win ONLY because they are declared later in
+       the file. A media query adds NOTHING to specificity - @media .x{} and a
+       plain .x{} tie, and source order breaks the tie. This file has now been
+       bitten twice. Concretely: hiding anything that carries .eyebrow from a
+       media query needs TWO classes (e.g. .hero-crest .eyebrow), because
+       .eyebrow{display:inline-flex} is declared further down and would win a
+       single-class fight regardless of the breakpoint. */
+    .hero-emblem{width:84px;height:84px;opacity:0.65}
+    .hero-crest{margin-bottom:12px}
     .wrap{padding:0 20px}
     .hero h1{font-size:40px;line-height:1.04}
     .hero p.lede{font-size:15px}
@@ -405,7 +428,16 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-left reveal">
-      <span class="eyebrow"><span class="pulse"></span> 2026 Filing Season · Now Enrolling EROs</span>
+      <!-- The nbsp are load-bearing. Below ~560px the pill wraps to two lines;
+           with plain spaces it broke mid-phrase as "...SEASON · NOW / ENROLLING
+           EROS". Binding each phrase forces the break at the separator instead.
+           Do NOT use white-space:nowrap spans here - .eyebrow is inline-flex, so
+           spans become flex items and the pill stops wrapping and overflows. -->
+      <div class="hero-crest">
+        <img class="hero-emblem" src="images/hero-emblem.png" width="160" height="160"
+             alt="" aria-hidden="true" />
+        <span class="eyebrow"><span class="pulse"></span> 2026&nbsp;Filing&nbsp;Season · Now&nbsp;Enrolling&nbsp;EROs</span>
+      </div>
       <h1>
         Professional tax software,
         <span class="line2"><em>rebuilt</em> from the ground up.</span>
