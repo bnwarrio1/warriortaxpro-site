@@ -402,6 +402,27 @@
         .file-status.success { color: var(--green-light); }
         .file-status.error { color: var(--red-light); }
 
+        /* PER-FILE TYPE PICKER (1099 variants, Photo ID) */
+        .file-type-select {
+            width: 100%;
+            margin-top: 6px;
+            padding: 6px 8px;
+            font-size: 12px;
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+        .file-item.needs-type { border: 1px solid var(--red-light); }
+        .file-item.needs-type .file-type-select { border-color: var(--red-light); }
+        .submit-hint {
+            font-size: 12px;
+            color: var(--red-light);
+            margin-top: 8px;
+            text-align: center;
+        }
+        .submit-hint:empty { display: none; }
+
         /* SUBMIT */
         .submit-section {
             margin-top: 24px;
@@ -775,153 +796,34 @@
             <div class="welcome-card">
                 <h1>Upload Your Tax Documents</h1>
                 <div class="preparer">Prepared by: <span id="preparerName">Your Tax Preparer</span></div>
-                <p>Please upload clear photos or scans of your tax documents below. Your files are encrypted and sent directly to your tax preparer.</p>
+                <p>Please upload clear photos or scans of your tax documents below. Photos work best - PDFs upload but don't preview.</p>
+                <!-- 7216-DISCLOSURE-PLACEHOLDER (intro): replace this paragraph with the disclosure text. -->
+                <p data-disclosure="intro">[Disclosure text pending - do not publish this page until it is supplied.]</p>
                 <div class="expires">⏱️ Link expires: <strong id="expiresDate">--</strong></div>
             </div>
 
-            <!-- Income Documents -->
+            <!-- DOCUMENT TILES. Rendered from TILES (script below) - the one list
+                 the tiles, fileStore and the upload category all read. Each tile's
+                 key is the exact category the server's class map accepts; a tile
+                 with a picker sends the picked value and never its own key. -->
             <div class="doc-section">
                 <div class="doc-section-title">Income Documents</div>
-
-                <div class="upload-card" id="card-w2">
-                    <div class="upload-card-header">
-                        <div class="upload-card-label">
-                            <div class="upload-card-icon">📄</div>
-                            <div>
-                                <h3>W-2 Forms</h3>
-                                <p>Wage and tax statements from employers</p>
-                            </div>
-                        </div>
-                        <div class="upload-card-count" id="count-w2"></div>
-                    </div>
-                    <div class="upload-zone" onclick="document.getElementById('input-w2').click()" 
-                         ondragover="event.preventDefault();this.classList.add('drag-over')"
-                         ondragleave="this.classList.remove('drag-over')"
-                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'w2')">
-                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">JPG, PNG, PDF (up to 10MB each)</div>
-                    </div>
-                    <div class="upload-buttons">
-                        <button class="upload-btn camera" onclick="capturePhoto('w2')">📷 Take Photo</button>
-                        <button class="upload-btn" onclick="document.getElementById('input-w2').click()">📁 Browse</button>
-                    </div>
-                    <input type="file" id="input-w2" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'w2')">
-                    <div class="file-list" id="files-w2"></div>
-                </div>
-
-                <div class="upload-card" id="card-1099">
-                    <div class="upload-card-header">
-                        <div class="upload-card-label">
-                            <div class="upload-card-icon">📋</div>
-                            <div>
-                                <h3>1099 Forms</h3>
-                                <p>Self-employment, interest, dividends, etc.</p>
-                            </div>
-                        </div>
-                        <div class="upload-card-count" id="count-1099"></div>
-                    </div>
-                    <div class="upload-zone" onclick="document.getElementById('input-1099').click()"
-                         ondragover="event.preventDefault();this.classList.add('drag-over')"
-                         ondragleave="this.classList.remove('drag-over')"
-                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'1099')">
-                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">JPG, PNG, PDF (up to 10MB each)</div>
-                    </div>
-                    <div class="upload-buttons">
-                        <button class="upload-btn camera" onclick="capturePhoto('1099')">📷 Take Photo</button>
-                        <button class="upload-btn" onclick="document.getElementById('input-1099').click()">📁 Browse</button>
-                    </div>
-                    <input type="file" id="input-1099" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'1099')">
-                    <div class="file-list" id="files-1099"></div>
-                </div>
+                <div id="tiles-income"></div>
             </div>
 
-            <!-- ID Documents -->
+            <div class="doc-section">
+                <div class="doc-section-title">Statements</div>
+                <div id="tiles-statements"></div>
+            </div>
+
             <div class="doc-section">
                 <div class="doc-section-title">Identification</div>
-
-                <div class="upload-card" id="card-id">
-                    <div class="upload-card-header">
-                        <div class="upload-card-label">
-                            <div class="upload-card-icon">🪪</div>
-                            <div>
-                                <h3>Photo ID</h3>
-                                <p>Driver's license or state ID (front & back)</p>
-                            </div>
-                        </div>
-                        <div class="upload-card-count" id="count-id"></div>
-                    </div>
-                    <div class="upload-zone" onclick="document.getElementById('input-id').click()"
-                         ondragover="event.preventDefault();this.classList.add('drag-over')"
-                         ondragleave="this.classList.remove('drag-over')"
-                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'id')">
-                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">Front and back (JPG, PNG, PDF)</div>
-                    </div>
-                    <div class="upload-buttons">
-                        <button class="upload-btn camera" onclick="capturePhoto('id')">📷 Take Photo</button>
-                        <button class="upload-btn" onclick="document.getElementById('input-id').click()">📁 Browse</button>
-                    </div>
-                    <input type="file" id="input-id" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'id')">
-                    <div class="file-list" id="files-id"></div>
-                </div>
-
-                <div class="upload-card" id="card-ssn">
-                    <div class="upload-card-header">
-                        <div class="upload-card-label">
-                            <div class="upload-card-icon">🔐</div>
-                            <div>
-                                <h3>Social Security Card</h3>
-                                <p>For taxpayer, spouse, and dependents</p>
-                            </div>
-                        </div>
-                        <div class="upload-card-count" id="count-ssn"></div>
-                    </div>
-                    <div class="upload-zone" onclick="document.getElementById('input-ssn').click()"
-                         ondragover="event.preventDefault();this.classList.add('drag-over')"
-                         ondragleave="this.classList.remove('drag-over')"
-                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'ssn')">
-                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">JPG, PNG, PDF (up to 10MB each)</div>
-                    </div>
-                    <div class="upload-buttons">
-                        <button class="upload-btn camera" onclick="capturePhoto('ssn')">📷 Take Photo</button>
-                        <button class="upload-btn" onclick="document.getElementById('input-ssn').click()">📁 Browse</button>
-                    </div>
-                    <input type="file" id="input-ssn" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'ssn')">
-                    <div class="file-list" id="files-ssn"></div>
-                </div>
+                <div id="tiles-identification"></div>
             </div>
 
-            <!-- Other Documents -->
             <div class="doc-section">
                 <div class="doc-section-title">Other Documents</div>
-
-                <div class="upload-card" id="card-other">
-                    <div class="upload-card-header">
-                        <div class="upload-card-label">
-                            <div class="upload-card-icon">📎</div>
-                            <div>
-                                <h3>Other Documents</h3>
-                                <p>1098, SSA-1099, receipts, or anything else</p>
-                            </div>
-                        </div>
-                        <div class="upload-card-count" id="count-other"></div>
-                    </div>
-                    <div class="upload-zone" onclick="document.getElementById('input-other').click()"
-                         ondragover="event.preventDefault();this.classList.add('drag-over')"
-                         ondragleave="this.classList.remove('drag-over')"
-                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'other')">
-                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
-                        <div class="upload-zone-hint">JPG, PNG, PDF (up to 10MB each)</div>
-                    </div>
-                    <div class="upload-buttons">
-                        <button class="upload-btn camera" onclick="capturePhoto('other')">📷 Take Photo</button>
-                        <button class="upload-btn" onclick="document.getElementById('input-other').click()">📁 Browse</button>
-                    </div>
-                    <input type="file" id="input-other" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'other')">
-                    <div class="file-list" id="files-other"></div>
-                </div>
+                <div id="tiles-other"></div>
             </div>
 
             <!-- CLIENT INFORMATION -->
@@ -938,32 +840,14 @@
                             <div class="upload-card-icon">👨‍👩‍👧‍👦</div>
                             <div>
                                 <h3>Dependents</h3>
-                                <p>Names, dates of birth, SSN, relationship</p>
+                                <p>Names, dates of birth, last 4 of SSN, relationship</p>
                             </div>
                         </div>
                         <div class="info-toggle" id="toggle-dependents">+</div>
                     </div>
                     <div class="info-card-body" id="body-dependents">
-                        <div id="dependents-list">
-                            <div class="dependent-row" id="dep-1">
-                                <div class="dep-row-header">
-                                    <span class="dep-label">Dependent 1</span>
-                                    <button class="dep-remove" onclick="removeDependent(1)" style="display:none;">✕</button>
-                                </div>
-                                <div class="form-row">
-                                    <input type="text" placeholder="Full Name" class="info-input" data-dep="1" data-field="name">
-                                    <input type="text" placeholder="Relationship" class="info-input info-sm" data-dep="1" data-field="relationship">
-                                </div>
-                                <div class="form-row">
-                                    <input type="date" class="info-input" data-dep="1" data-field="dob" title="Date of Birth">
-                                    <input type="text" placeholder="SSN (xxx-xx-xxxx)" class="info-input" data-dep="1" data-field="ssn">
-                                </div>
-                                <div class="form-row">
-                                    <input type="number" placeholder="Months lived with you" class="info-input info-sm" data-dep="1" data-field="months" min="0" max="12">
-                                    <label class="info-check"><input type="checkbox" data-dep="1" data-field="student"> Full-time student</label>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Rows are rendered by dependentRowHtml() - one template, not two. -->
+                        <div id="dependents-list"></div>
                         <button class="add-dep-btn" onclick="addDependent()">+ Add Another Dependent</button>
                     </div>
                 </div>
@@ -1093,10 +977,10 @@
                 <button class="submit-btn" id="submitBtn" onclick="submitAll()">
                     Submit Documents & Info
                 </button>
-                <p class="submit-note">
-                    Your documents and information are transmitted securely and will only be accessible 
-                    by your assigned tax preparer. Files are encrypted during transfer.
-                </p>
+                <div class="submit-hint" id="submitHint"></div>
+                <div class="submit-hint" id="infoError"></div>
+                <!-- 7216-DISCLOSURE-PLACEHOLDER (submit): replace this paragraph with the disclosure text. -->
+                <p class="submit-note" data-disclosure="submit">[Disclosure text pending - do not publish this page until it is supplied.]</p>
             </div>
         </div>
 
@@ -1133,15 +1017,86 @@
         // For local testing: const API_BASE = 'https://localhost:5252';
 
         // ============================================================
+        // TILES - THE ONE LIST
+        // ============================================================
+        // key   : the tile's id AND, for a tile without a picker, the exact
+        //         `category` the server's class map (MapDocType) accepts.
+        // picker: per-file choice; the picked value is the category sent, and
+        //         the tile's own key is NEVER sent (a bare "1099" names five
+        //         forms, a bare "id" names two).
+        const PHOTO_HINT = "JPG, PNG, PDF up to 10MB each. Photos work best - PDFs upload but don't preview.";
+        const TILES = [
+            { key: 'w2',       section: 'income', icon: '📄', title: 'W-2 Forms', hint: 'Wage and tax statements from employers' },
+            { key: '1099',     section: 'income', icon: '📋', title: '1099 Forms', hint: 'Self-employment, interest, dividends, retirement, unemployment',
+              picker: { prompt: 'Which 1099 is this? The form name is printed in the top right corner.', options: [
+                  ['1099-nec',  '1099-NEC - nonemployee compensation'],
+                  ['1099-int',  '1099-INT - interest'],
+                  ['1099-div',  '1099-DIV - dividends'],
+                  ['1099-misc', '1099-MISC - miscellaneous income'],
+                  ['1099-r',    '1099-R - retirement, pension, IRA'],
+                  ['1099-g',    '1099-G - unemployment, state refund'] ] } },
+            { key: 'ssa-1099', section: 'income', icon: '🏛️', title: 'SSA-1099', hint: 'Social Security benefit statement' },
+            { key: 'w-2g',     section: 'income', icon: '🎰', title: 'W-2G', hint: 'Gambling winnings' },
+            { key: '1098',     section: 'statements', icon: '🏠', title: '1098', hint: 'Mortgage interest' },
+            { key: '1098-t',   section: 'statements', icon: '🎓', title: '1098-T', hint: 'Tuition' },
+            { key: '1098-e',   section: 'statements', icon: '📚', title: '1098-E', hint: 'Student loan interest' },
+            { key: '1095-a',   section: 'statements', icon: '🩺', title: '1095-A', hint: 'Health insurance marketplace statement' },
+            { key: 'id',       section: 'identification', icon: '🪪', title: 'Photo ID', hint: "Driver's license, state ID or passport (front & back)",
+              picker: { prompt: 'Which ID is this?', options: [
+                  ['drivers-license', "Driver's license / state ID"],
+                  ['passport',        'Passport'] ] } },
+            { key: 'ssn',      section: 'identification', icon: '🔐', title: 'Social Security Card', hint: 'Used to verify identity - never read automatically' },
+            { key: 'other',    section: 'other', icon: '📎', title: 'Other Documents', hint: 'Anything else' },
+        ];
+        const tileByKey = Object.fromEntries(TILES.map(t => [t.key, t]));
+
+        function esc(text) {
+            return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function tileHtml(t) {
+            const k = t.key;
+            return `
+                <div class="upload-card" id="card-${k}">
+                    <div class="upload-card-header">
+                        <div class="upload-card-label">
+                            <div class="upload-card-icon">${t.icon}</div>
+                            <div>
+                                <h3>${esc(t.title)}</h3>
+                                <p>${esc(t.hint)}</p>
+                            </div>
+                        </div>
+                        <div class="upload-card-count" id="count-${k}"></div>
+                    </div>
+                    <div class="upload-zone" onclick="document.getElementById('input-${k}').click()"
+                         ondragover="event.preventDefault();this.classList.add('drag-over')"
+                         ondragleave="this.classList.remove('drag-over')"
+                         ondrop="event.preventDefault();this.classList.remove('drag-over');handleDrop(event,'${k}')">
+                        <div class="upload-zone-text">Tap to <strong>choose files</strong> or drag and drop</div>
+                        <div class="upload-zone-hint">${esc(PHOTO_HINT)}</div>
+                    </div>
+                    <div class="upload-buttons">
+                        <button class="upload-btn camera" onclick="capturePhoto('${k}')">📷 Take Photo</button>
+                        <button class="upload-btn" onclick="document.getElementById('input-${k}').click()">📁 Browse</button>
+                    </div>
+                    <input type="file" id="input-${k}" multiple accept="image/*,.pdf" onchange="handleFiles(this.files,'${k}')">
+                    <div class="file-list" id="files-${k}"></div>
+                </div>`;
+        }
+
+        function renderTiles() {
+            for (const t of TILES) {
+                const host = document.getElementById(`tiles-${t.section}`);
+                if (!host) throw new Error(`No section container for tile ${t.key}`);
+                host.insertAdjacentHTML('beforeend', tileHtml(t));
+            }
+        }
+
+        // ============================================================
         // STATE
         // ============================================================
-        const fileStore = {
-            'w2': [],
-            '1099': [],
-            'id': [],
-            'ssn': [],
-            'other': []
-        };
+        // fileStore is keyed by TILES - built from the list, never typed twice.
+        const fileStore = Object.fromEntries(TILES.map(t => [t.key, []]));
 
         let sessionToken = null;
         let sessionData = null;
@@ -1161,31 +1116,34 @@
         // ============================================================
         // DEPENDENT MANAGEMENT
         // ============================================================
+        // ONE template for every row, the first included. The SSN box takes
+        // the last four digits only (key stays `ssn`): the full number is
+        // read from the card by the preparer, never typed on a phone.
+        function dependentRowHtml(n) {
+            return `
+                <div class="dependent-row" id="dep-${n}">
+                    <div class="dep-row-header">
+                        <span class="dep-label">Dependent ${n}</span>
+                        <button class="dep-remove" onclick="removeDependent(${n})"${n === 1 ? ' style="display:none;"' : ''}>✕</button>
+                    </div>
+                    <div class="form-row">
+                        <input type="text" placeholder="Full Name" class="info-input" data-dep="${n}" data-field="name">
+                        <input type="text" placeholder="Relationship" class="info-input info-sm" data-dep="${n}" data-field="relationship">
+                    </div>
+                    <div class="form-row">
+                        <input type="date" class="info-input" data-dep="${n}" data-field="dob" title="Date of Birth">
+                        <input type="text" placeholder="SSN - last 4 digits" class="info-input" data-dep="${n}" data-field="ssn" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+                    </div>
+                    <div class="form-row">
+                        <input type="number" placeholder="Months lived with you" class="info-input info-sm" data-dep="${n}" data-field="months" min="0" max="12">
+                        <label class="info-check"><input type="checkbox" data-dep="${n}" data-field="student"> Full-time student</label>
+                    </div>
+                </div>`;
+        }
+
         function addDependent() {
             depCount++;
-            const list = document.getElementById('dependents-list');
-            const div = document.createElement('div');
-            div.className = 'dependent-row';
-            div.id = `dep-${depCount}`;
-            div.innerHTML = `
-                <div class="dep-row-header">
-                    <span class="dep-label">Dependent ${depCount}</span>
-                    <button class="dep-remove" onclick="removeDependent(${depCount})">✕</button>
-                </div>
-                <div class="form-row">
-                    <input type="text" placeholder="Full Name" class="info-input" data-dep="${depCount}" data-field="name">
-                    <input type="text" placeholder="Relationship" class="info-input info-sm" data-dep="${depCount}" data-field="relationship">
-                </div>
-                <div class="form-row">
-                    <input type="date" class="info-input" data-dep="${depCount}" data-field="dob" title="Date of Birth">
-                    <input type="text" placeholder="SSN (xxx-xx-xxxx)" class="info-input" data-dep="${depCount}" data-field="ssn">
-                </div>
-                <div class="form-row">
-                    <input type="number" placeholder="Months lived with you" class="info-input info-sm" data-dep="${depCount}" data-field="months" min="0" max="12">
-                    <label class="info-check"><input type="checkbox" data-dep="${depCount}" data-field="student"> Full-time student</label>
-                </div>
-            `;
-            list.appendChild(div);
+            document.getElementById('dependents-list').insertAdjacentHTML('beforeend', dependentRowHtml(depCount));
         }
 
         function removeDependent(id) {
@@ -1338,7 +1296,10 @@
                 }
 
                 const id = Date.now() + Math.random().toString(36).substr(2, 5);
-                const entry = { id, file, name: file.name, size: file.size, status: 'ready' };
+                // `type` is the category that will be SENT: the tile's key, or
+                // blank until the picker is answered.
+                const tile = tileByKey[category];
+                const entry = { id, file, name: file.name, size: file.size, status: 'ready', type: tile.picker ? '' : tile.key };
 
                 // Create thumbnail for images
                 if (file.type.startsWith('image/')) {
@@ -1400,16 +1361,38 @@
                 ? `<img class="file-thumb" src="${entry.thumb}" alt="">`
                 : `<div class="file-thumb" style="display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--bg);">📄</div>`;
 
+            const tile = tileByKey[category];
+            const pickerHtml = tile.picker
+                ? `<select class="file-type-select" onchange="setFileType('${category}','${entry.id}',this.value)">
+                       <option value="">${esc(tile.picker.prompt)}</option>
+                       ${tile.picker.options.map(([v, label]) => `<option value="${v}">${esc(label)}</option>`).join('')}
+                   </select>`
+                : '';
+
             div.innerHTML = `
                 ${thumbHtml}
                 <div class="file-info">
-                    <div class="file-name">${entry.name}</div>
+                    <div class="file-name">${esc(entry.name)}</div>
                     <div class="file-size">${formatSize(entry.size)}</div>
+                    ${pickerHtml}
                 </div>
                 <button class="file-remove" onclick="removeFile('${category}','${entry.id}')" title="Remove">✕</button>
             `;
+            if (tile.picker) div.classList.add('needs-type');
 
             container.appendChild(div);
+        }
+
+        function setFileType(category, id, value) {
+            const entry = fileStore[category].find(f => f.id === id);
+            if (!entry) return;
+            entry.type = value;
+            document.getElementById(`file-${id}`)?.classList.toggle('needs-type', !value);
+            refreshSubmit();
+        }
+
+        function filesMissingType() {
+            return Object.values(fileStore).flat().filter(f => !f.type);
         }
 
         function updateCounts() {
@@ -1424,8 +1407,18 @@
             });
 
             document.getElementById('totalCount').textContent = total;
-            // Enable submit if files added (client info alone also enables via input listener below)
-            document.getElementById('submitBtn').disabled = total === 0 && !hasClientInfo();
+            refreshSubmit();
+        }
+
+        // The submit button's one gate: nothing to send, or a file whose
+        // form type has not been chosen. The hint says which.
+        function refreshSubmit() {
+            const missing = filesMissingType().length;
+            const nothing = getTotalCount() === 0 && !hasClientInfo();
+            document.getElementById('submitBtn').disabled = nothing || missing > 0;
+            document.getElementById('submitHint').textContent = missing > 0
+                ? `Choose the form type for ${missing} file${missing > 1 ? 's' : ''} before submitting.`
+                : '';
         }
 
         function hasClientInfo() {
@@ -1439,7 +1432,7 @@
         // Listen for info input changes to enable submit
         document.addEventListener('input', function(e) {
             if (e.target.classList.contains('info-input') || e.target.classList.contains('info-textarea')) {
-                document.getElementById('submitBtn').disabled = getTotalCount() === 0 && !hasClientInfo();
+                refreshSubmit();
             }
         });
 
@@ -1454,17 +1447,43 @@
             let uploaded = 0;
             let failed = 0;
             const totalFiles = getTotalCount();
+            document.getElementById('infoError').textContent = '';
 
-            // First, submit client info
+            // A file with no chosen type is never sent under the tile's key.
+            const untyped = filesMissingType();
+            if (untyped.length > 0) {
+                refreshSubmit();
+                btn.textContent = 'Submit Documents & Info';
+                return;
+            }
+
+            // FIRST the questionnaire, and its answer is READ. A refusal
+            // (400 unexpected shape, 413 too large, an expired link) stops
+            // here with the server's own sentence; nothing is reported as
+            // submitted that the server did not accept.
+            btn.textContent = 'Sending your information...';
+            let infoResponse;
             try {
-                const clientInfo = collectClientInfo();
-                await fetch(`${API_BASE}/api/intelliwarrior/client-info/${sessionToken}`, {
+                infoResponse = await fetch(`${API_BASE}/api/intelliwarrior/client-info/${sessionToken}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(clientInfo)
+                    body: JSON.stringify(collectClientInfo())
                 });
             } catch (err) {
-                console.warn('Client info submission failed (non-critical):', err);
+                infoRejected('We could not reach the server to send your information. Check your connection and try again.');
+                return;
+            }
+            if (!infoResponse.ok) {
+                let message = '';
+                try {
+                    const body = await infoResponse.json();
+                    message = (body && (body.error || body.message)) || '';
+                } catch (_) { /* not JSON */ }
+                if (!message) {
+                    try { message = (await infoResponse.text()).trim(); } catch (_) { /* no body */ }
+                }
+                infoRejected(message || `The server did not accept your information (HTTP ${infoResponse.status}).`);
+                return;
             }
 
             // Then upload files
@@ -1473,7 +1492,7 @@
                     try {
                         const formData = new FormData();
                         formData.append('file', entry.file);
-                        formData.append('category', category);
+                        formData.append('category', entry.type);   // the picked value, or the tile's key
                         formData.append('token', sessionToken);
 
                         const response = await fetch(`${API_BASE}/api/intelliwarrior/upload/${sessionToken}`, {
@@ -1528,9 +1547,18 @@
             return Object.values(fileStore).reduce((sum, arr) => sum + arr.length, 0);
         }
 
+        function infoRejected(message) {
+            const btn = document.getElementById('submitBtn');
+            document.getElementById('infoError').textContent = 'Your information was not submitted: ' + message;
+            btn.textContent = 'Submit Documents & Info';
+            btn.disabled = false;
+        }
+
         // ============================================================
         // START
         // ============================================================
+        renderTiles();
+        document.getElementById('dependents-list').insertAdjacentHTML('beforeend', dependentRowHtml(1));
         init();
     </script>
 
