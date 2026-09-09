@@ -565,11 +565,14 @@
             cursor: pointer;
         }
 
-        .info-check input[type="checkbox"] {
+        .info-check input[type="checkbox"],
+        .info-check input[type="radio"] {
             width: 16px;
             height: 16px;
             accent-color: var(--cyan);
         }
+        .check-group { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 8px; }
+        .check-group-note { font-size: 12px; color: var(--text3); margin-bottom: 8px; }
 
         .dependent-row {
             background: var(--bg3);
@@ -839,7 +842,7 @@
                             <div class="upload-card-icon">👨‍👩‍👧‍👦</div>
                             <div>
                                 <h3>Dependents</h3>
-                                <p>Names, dates of birth, last 4 of SSN, relationship</p>
+                                <p>First and last name, date of birth, last 4 of SSN, relationship</p>
                             </div>
                         </div>
                         <div class="info-toggle" id="toggle-dependents">+</div>
@@ -867,16 +870,27 @@
                         <div class="form-row">
                             <input type="text" placeholder="Provider / Daycare Name" class="info-input" id="childcare-name">
                         </div>
+                        <!-- The address as the return stores it: street, city, state, ZIP. -->
                         <div class="form-row">
-                            <input type="text" placeholder="Provider Address" class="info-input" id="childcare-address">
+                            <input type="text" placeholder="Provider Street Address" class="info-input" id="childcare-street">
+                        </div>
+                        <div class="form-row">
+                            <input type="text" placeholder="City" class="info-input" id="childcare-city">
+                            <select class="info-input info-xs" id="childcare-state"></select>
+                            <input type="text" placeholder="ZIP" class="info-input info-xs" id="childcare-zip" maxlength="10" inputmode="numeric">
+                        </div>
+                        <!-- Which number it is - the client knows; the return has to ask. -->
+                        <div class="check-group">
+                            <label class="info-check"><input type="radio" name="childcare-tin-type" value="EIN"> Provider has an EIN (business)</label>
+                            <label class="info-check"><input type="radio" name="childcare-tin-type" value="SSN"> Provider uses their SSN (a person)</label>
                         </div>
                         <div class="form-row">
                             <input type="text" placeholder="Provider EIN or SSN" class="info-input" id="childcare-ein">
                             <input type="number" placeholder="Amount Paid ($)" class="info-input info-sm" id="childcare-amount">
                         </div>
-                        <div class="form-row">
-                            <input type="text" placeholder="Child(ren) name(s) who attended" class="info-input" id="childcare-children">
-                        </div>
+                        <!-- One checkbox per dependent entered above, rendered by renderChildcareChildren(). -->
+                        <div class="check-group-note">Which of your dependents attended?</div>
+                        <div class="check-group" id="childcare-children"></div>
                     </div>
                 </div>
 
@@ -1117,6 +1131,18 @@
         // ONE template for every row, the first included. The SSN box takes
         // the last four digits only (key stays `ssn`): the full number is
         // read from the card by the preparer, never typed on a phone.
+        // THE VOCABULARIES THE DESKTOP STORES. Relationship strings are the
+        // dependents editor's own picker items (DependentRelationshipCodes.
+        // ToEditorString) - a value the enum picker can seed from, never free
+        // text. "Sibling" is deliberately absent: the editor has no such value
+        // and folds it to Other; a client knows which of Brother / Sister.
+        const RELATIONSHIPS = ['Son', 'Daughter', 'Stepchild', 'Foster Child', 'Grandchild', 'Brother', 'Sister', 'Parent', 'Other'];
+        const STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
+
+        function optionsHtml(values, blankLabel) {
+            return `<option value="">${esc(blankLabel)}</option>` + values.map(v => `<option value="${esc(String(v))}">${esc(String(v))}</option>`).join('');
+        }
+
         function dependentRowHtml(n) {
             return `
                 <div class="dependent-row" id="dep-${n}">
@@ -1125,18 +1151,45 @@
                         <button class="dep-remove" onclick="removeDependent(${n})"${n === 1 ? ' style="display:none;"' : ''}>✕</button>
                     </div>
                     <div class="form-row">
-                        <input type="text" placeholder="Full Name" class="info-input" data-dep="${n}" data-field="name">
-                        <input type="text" placeholder="Relationship" class="info-input info-sm" data-dep="${n}" data-field="relationship">
+                        <input type="text" placeholder="First Name" class="info-input" data-dep="${n}" data-field="firstName">
+                        <input type="text" placeholder="Last Name" class="info-input" data-dep="${n}" data-field="lastName">
+                    </div>
+                    <div class="form-row">
+                        <select class="info-input" data-dep="${n}" data-field="relationship">${optionsHtml(RELATIONSHIPS, 'Relationship to you')}</select>
+                        <select class="info-input info-sm" data-dep="${n}" data-field="months">${optionsHtml(Array.from({ length: 13 }, (_, i) => i), 'Months lived with you')}</select>
                     </div>
                     <div class="form-row">
                         <input type="date" class="info-input" data-dep="${n}" data-field="dob" title="Date of Birth">
                         <input type="text" placeholder="SSN - last 4 digits" class="info-input" data-dep="${n}" data-field="ssn" maxlength="4" inputmode="numeric" pattern="[0-9]*">
                     </div>
                     <div class="form-row">
-                        <input type="number" placeholder="Months lived with you" class="info-input info-sm" data-dep="${n}" data-field="months" min="0" max="12">
                         <label class="info-check"><input type="checkbox" data-dep="${n}" data-field="student"> Full-time student</label>
                     </div>
                 </div>`;
+        }
+
+        // The dependents a childcare tick can name: those entered above, by
+        // row. Re-rendered on every dependents keystroke; ticks survive it.
+        function namedDependentRows() {
+            return [...document.querySelectorAll('.dependent-row')].map(row => {
+                const n = row.id.replace('dep-', '');
+                const first = row.querySelector(`[data-dep="${n}"][data-field="firstName"]`)?.value.trim() || '';
+                const last = row.querySelector(`[data-dep="${n}"][data-field="lastName"]`)?.value.trim() || '';
+                return { n, first, last };
+            }).filter(d => d.first || d.last);
+        }
+
+        function renderChildcareChildren() {
+            const host = document.getElementById('childcare-children');
+            if (!host) return;
+            const ticked = new Set([...host.querySelectorAll('input:checked')].map(i => i.value));
+            const rows = namedDependentRows();
+            if (rows.length === 0) {
+                host.innerHTML = '<span class="check-group-note">Add your dependents above first.</span>';
+                return;
+            }
+            host.innerHTML = rows.map(d =>
+                `<label class="info-check"><input type="checkbox" value="${d.n}"${ticked.has(String(d.n)) ? ' checked' : ''}> ${esc(`${d.first} ${d.last}`.trim())}</label>`).join('');
         }
 
         function addDependent() {
@@ -1146,6 +1199,7 @@
 
         function removeDependent(id) {
             document.getElementById(`dep-${id}`)?.remove();
+            renderChildcareChildren();
         }
 
         // ============================================================
@@ -1153,29 +1207,43 @@
         // ============================================================
         function collectClientInfo() {
             // Dependents
+            // Dependents, keyed the way the return stores them: two names, a
+            // relationship from the editor's vocabulary, months as an integer
+            // (null when unanswered), the SSN's last four, the student flag.
             const dependents = [];
-            document.querySelectorAll('.dependent-row').forEach(row => {
-                const depId = row.id.replace('dep-', '');
-                const name = row.querySelector(`[data-dep="${depId}"][data-field="name"]`)?.value || '';
-                if (name.trim()) {
-                    dependents.push({
-                        name: name,
-                        relationship: row.querySelector(`[data-dep="${depId}"][data-field="relationship"]`)?.value || '',
-                        dob: row.querySelector(`[data-dep="${depId}"][data-field="dob"]`)?.value || '',
-                        ssn: row.querySelector(`[data-dep="${depId}"][data-field="ssn"]`)?.value || '',
-                        months: row.querySelector(`[data-dep="${depId}"][data-field="months"]`)?.value || '',
-                        student: row.querySelector(`[data-dep="${depId}"][data-field="student"]`)?.checked || false
-                    });
-                }
-            });
+            const indexByRow = {};
+            for (const d of namedDependentRows()) {
+                const row = document.getElementById(`dep-${d.n}`);
+                const field = (f) => row.querySelector(`[data-dep="${d.n}"][data-field="${f}"]`);
+                const monthsRaw = field('months')?.value ?? '';
+                indexByRow[d.n] = dependents.length;
+                dependents.push({
+                    firstName: d.first,
+                    lastName: d.last,
+                    relationship: field('relationship')?.value || '',
+                    dob: field('dob')?.value || '',
+                    ssn: field('ssn')?.value || '',
+                    months: monthsRaw === '' ? null : parseInt(monthsRaw, 10),
+                    student: field('student')?.checked || false
+                });
+            }
 
-            // Childcare
+            // Childcare: the address in parts, the TIN's kind, and the children
+            // as indexes into the dependents array above.
+            const children = [...document.querySelectorAll('#childcare-children input:checked')]
+                .map(i => indexByRow[i.value])
+                .filter(i => i !== undefined)
+                .sort((a, b) => a - b);
             const childcare = {
                 providerName: document.getElementById('childcare-name')?.value || '',
-                providerAddress: document.getElementById('childcare-address')?.value || '',
+                providerStreet: document.getElementById('childcare-street')?.value || '',
+                providerCity: document.getElementById('childcare-city')?.value || '',
+                providerState: document.getElementById('childcare-state')?.value || '',
+                providerZip: document.getElementById('childcare-zip')?.value || '',
+                providerTinType: document.querySelector('input[name="childcare-tin-type"]:checked')?.value || '',
                 providerEin: document.getElementById('childcare-ein')?.value || '',
                 amountPaid: document.getElementById('childcare-amount')?.value || '',
-                children: document.getElementById('childcare-children')?.value || ''
+                children
             };
 
             // Address / Personal
@@ -1433,7 +1501,7 @@
 
         function hasClientInfo() {
             const notes = document.getElementById('preparer-notes')?.value?.trim();
-            const depName = document.querySelector('[data-dep="1"][data-field="name"]')?.value?.trim();
+            const depName = namedDependentRows().length > 0;
             const bankRouting = document.getElementById('bank-routing')?.value?.trim();
             const childcare = document.getElementById('childcare-name')?.value?.trim();
             return !!(notes || depName || bankRouting || childcare);
@@ -1442,6 +1510,7 @@
         // Listen for info input changes to enable submit
         document.addEventListener('input', function(e) {
             if (e.target.classList.contains('info-input') || e.target.classList.contains('info-textarea')) {
+                if (e.target.closest('#dependents-list')) renderChildcareChildren();
                 refreshSubmit();
             }
         });
@@ -1569,6 +1638,8 @@
         // ============================================================
         renderTiles();
         document.getElementById('dependents-list').insertAdjacentHTML('beforeend', dependentRowHtml(1));
+        document.getElementById('childcare-state').innerHTML = optionsHtml(STATES, 'State');
+        renderChildcareChildren();
         init();
     </script>
 
