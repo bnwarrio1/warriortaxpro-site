@@ -797,8 +797,7 @@
                 <h1>Upload Your Tax Documents</h1>
                 <div class="preparer">Prepared by: <span id="preparerName">Your Tax Preparer</span></div>
                 <p>Please upload clear photos or scans of your tax documents below. Photos work best - PDFs upload but don't preview.</p>
-                <!-- 7216-DISCLOSURE-PLACEHOLDER (intro): replace this paragraph with the disclosure text. -->
-                <p data-disclosure="intro">[Disclosure text pending - do not publish this page until it is supplied.]</p>
+                <p data-disclosure="intro">Your files are encrypted in transit and go to your tax preparer. To read the figures on your forms, document images are processed by Microsoft Azure Document Intelligence and, for some form types, by Anthropic. They are used only to prepare your return.</p>
                 <div class="expires">⏱️ Link expires: <strong id="expiresDate">--</strong></div>
             </div>
 
@@ -979,8 +978,7 @@
                 </button>
                 <div class="submit-hint" id="submitHint"></div>
                 <div class="submit-hint" id="infoError"></div>
-                <!-- 7216-DISCLOSURE-PLACEHOLDER (submit): replace this paragraph with the disclosure text. -->
-                <p class="submit-note" data-disclosure="submit">[Disclosure text pending - do not publish this page until it is supplied.]</p>
+                <p class="submit-note" data-disclosure="submit">By submitting, you authorize Warrior Financial Services LLC to share the documents you upload with Microsoft Azure and Anthropic for the purpose of reading them into your tax return. Your information is accessible only to your assigned tax preparer. See our <a href="privacy-policy.html">Privacy Policy</a> for how long it is kept.</p>
             </div>
         </div>
 
@@ -1219,6 +1217,17 @@
                 return;
             }
 
+            // DEMO ONLY ON REQUEST. The upload screen used to appear whenever the
+            // session GET failed for any reason but 404/410 - a broken server
+            // showed a working form whose every upload then failed. Demo is now
+            // ?demo=1 and nothing else; every other failure is said out loud.
+            if (urlParams.get('demo') === '1') {
+                document.getElementById('preparerName').textContent = 'Warrior Financial Services';
+                document.getElementById('expiresDate').textContent = '7 days from now';
+                showScreen('uploadScreen');
+                return;
+            }
+
             try {
                 const response = await fetch(`${API_BASE}/api/intelliwarrior/session/${sessionToken}`);
                 if (!response.ok) {
@@ -1227,7 +1236,7 @@
                     } else if (response.status === 410) {
                         showError('Link Expired', 'This upload link has expired. Please contact your tax preparer for a new link.');
                     } else {
-                        throw new Error('Server error');
+                        showUnreachable();
                     }
                     return;
                 }
@@ -1260,12 +1269,13 @@
                 showScreen('uploadScreen');
 
             } catch (err) {
-                // FOR DEMO/TESTING: If API is unreachable, show upload screen anyway
-                console.warn('API unreachable, showing demo mode:', err);
-                document.getElementById('preparerName').textContent = 'Warrior Financial Services';
-                document.getElementById('expiresDate').textContent = '7 days from now';
-                showScreen('uploadScreen');
+                console.warn('Session lookup failed:', err);
+                showUnreachable();
             }
+        }
+
+        function showUnreachable() {
+            showError('Server Unreachable', "We couldn't reach your preparer's server. Try again in a few minutes.");
         }
 
         // ============================================================
