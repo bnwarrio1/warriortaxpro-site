@@ -691,7 +691,8 @@
           - Empty  -> the form saves the registration and tells the student
                       a secure payment link is coming by email.
           - Set    -> the student is sent straight to checkout after the
-                      registration is saved, and returns here enrolled.
+                      registration is saved, and lands back on the
+                      confirmation screen afterward.
 
         To turn payment on with Stripe (no server needed):
           1. Stripe Dashboard -> Payment Links -> New link
@@ -702,13 +703,17 @@
         PayPal, Square, or any other hosted checkout works the same way as
         long as its post-payment redirect points back to that ?paid=1 URL.
 
+        That ?paid=1 is only the screen the student lands on. Confirm every
+        payment against Stripe itself before you count someone enrolled —
+        the URL is public and can be typed by anyone.
+
         Card details are never entered on this page and never touch this
         site — the processor's own hosted checkout collects them. Do not
         add card fields here; that would pull this page into PCI scope.
      ========================================================== */
 
   var ACCESS_KEY   = '83711895-ef32-4a33-8628-ca5a8941cedd';
-  var PAYMENT_LINK = '';
+  var PAYMENT_LINK = 'https://buy.stripe.com/28E28r7iy5rt21B8fd2B200';
   var COURSE       = '4-Week Tax Course — 2027 Tax Season';
   var TUITION      = '$695';
 
@@ -730,7 +735,12 @@
   function val(id) { var el = $(id); return el ? el.value.trim() : ''; }
 
   /* ---------- returning from checkout ---------- */
-  // Stripe (or whichever processor) sends the student back to ?paid=1.
+  // ?paid=1 SWITCHES A SCREEN. IT IS NOT EVIDENCE OF PAYMENT.
+  // It is the redirect Stripe is configured to send students to afterward, but
+  // anyone can type it into the address bar, so it proves nothing and must
+  // never be treated as proof: do not record a payment, release course access,
+  // or email a receipt off the back of it. Stripe's own dashboard and receipt
+  // are the record of who actually paid.
   var params = new URLSearchParams(location.search);
   if (params.get('paid') === '1' || params.get('enrolled') === '1') {
     showResult('enrolledState');
@@ -958,10 +968,13 @@
 
         if (PAYMENT_LINK) {
           // Registration is saved; hand off to the processor's hosted checkout.
+          // Both params carry the same email: prefilled_email fills Stripe's
+          // form, client_reference_id comes back on the Stripe payment so a
+          // payment can be matched to the registration email that arrived here.
           var sep = PAYMENT_LINK.indexOf('?') === -1 ? '?' : '&';
           location.href = PAYMENT_LINK + sep +
             'prefilled_email=' + encodeURIComponent(email) +
-            '&client_reference_id=' + encodeURIComponent(val('fullName').replace(/[^\w]+/g, '-').slice(0, 40));
+            '&client_reference_id=' + encodeURIComponent(email);
           return;
         }
         showResult('receivedState');
