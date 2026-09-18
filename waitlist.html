@@ -127,6 +127,7 @@
       <input type="hidden" name="subject" value="New Warrior Tax Pro get-started request">
       <input type="hidden" name="from_name" value="Warrior Tax Pro Get Started">
       <input type="hidden" name="plan_interest" id="planInterest" value="">
+      <input type="hidden" name="request_type" id="requestType" value="Get started">
       <!-- Honeypot spam trap (bots fill this; humans never see it) -->
       <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
 
@@ -197,12 +198,25 @@
 <footer>© 2027 Warrior Financial Services LLC · All rights reserved</footer>
 
 <script>
-  // If arriving from a pricing card (?plan=…), capture which tier they picked
-  const plan = new URLSearchParams(location.search).get('plan');
+  // Carry context from whichever button they clicked: a pricing card sends
+  // ?plan=…, the closing CTA sends ?intent=demo. Both land in the lead email.
+  const params = new URLSearchParams(location.search);
+  const chipParts = [];
+
+  const plan = params.get('plan');
   if (plan) {
     document.getElementById('planInterest').value = plan;
+    chipParts.push('Plan of interest: ' + plan);
+  }
+
+  if (params.get('intent') === 'demo') {
+    document.getElementById('requestType').value = 'Demo request';
+    chipParts.push('Requesting: 30-minute demo');
+  }
+
+  if (chipParts.length) {
     const chip = document.getElementById('planChip');
-    chip.textContent = 'Plan of interest: ' + plan;
+    chip.textContent = chipParts.join(' · ');
     chip.style.display = 'inline-flex';
   }
 
