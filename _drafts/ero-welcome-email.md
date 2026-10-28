@@ -1,8 +1,9 @@
 # DRAFT - the welcome email that brings an ERO's licence key
 
 *In `_drafts/`, which GitHub Pages (Jekyll) does not publish. Bassam sends it by hand for each
-Payment Link sale (licences for those sales are issued by hand for now). Replace every
-`{{...}}`. The licence key goes only in this email, never by text message.*
+Payment Link sale (licences for those sales are issued by hand for now), **within 1 business day
+of purchase** - the promise download.html makes. Replace every `{{...}}`. The licence key goes only
+in this email, never by text message.*
 
 ---
 
