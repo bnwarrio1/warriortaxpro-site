@@ -416,6 +416,17 @@
     .pcard{padding:32px 24px}
     .price-num{font-size:54px}
   }
+
+  /* ============ DOWNLOAD (its own section; values from download.json, ruled 2026-11-02) ============ */
+  .download{padding:72px 0}
+  .download .dl-card{max-width:760px;margin:0 auto;padding:36px;border:1px solid rgba(148,163,184,0.18);border-radius:16px;background:var(--bg-2)}
+  .download h2{margin:14px 0 8px;font-size:30px}
+  .download .dl-sub{color:var(--ink-2);margin:0 0 22px}
+  .download dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 18px;margin:22px 0 0;font-size:14px}
+  .download dt{color:var(--ink-3);font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding-top:3px}
+  .download dd{margin:0;color:var(--ink);word-break:break-all}
+  .download .dl-sha{font-family:var(--mono);font-size:12px}
+  @media (max-width:640px){.download .dl-card{padding:24px}.download dl{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -826,6 +837,27 @@
   </div>
 </section>
 
+<!-- ============ DOWNLOAD (values from download.json, which the release step writes) ============ -->
+<section class="download" id="download">
+  <div class="wrap">
+    <div class="dl-card reveal">
+      <span class="sec-label">Download</span>
+      <h2>Warrior Tax Pro Elite for Windows</h2>
+      <p class="dl-sub">The installer comes only from Warrior Tax Pro's own server. Your licence key arrives by email after purchase.</p>
+      <div id="download-release" hidden>
+        <a class="btn-primary" id="download-link" href="#download">Download the installer <span class="arr">&rarr;</span></a>
+        <dl>
+          <dt>Version</dt><dd id="download-version"></dd>
+          <dt>File</dt><dd id="download-file"></dd>
+          <dt>SHA-256</dt><dd class="dl-sha" id="download-sha"></dd>
+          <dt>Publisher</dt><dd id="download-signer"></dd>
+        </dl>
+      </div>
+      <p class="dl-sub" id="download-none">The installer is not released yet. Your licence email will carry the link when it is.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ============ CLOSING CTA ============ -->
 <section class="closing" id="demo">
   <div class="wrap">
@@ -916,5 +948,6 @@
   // Ensure everything is visible for print, regardless of scroll state
   document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
 </script>
+<script src="download-section.js" defer></script>
 </body>
 </html>
