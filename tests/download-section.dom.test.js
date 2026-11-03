@@ -7,10 +7,11 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const source = fs.readFileSync(path.join(__dirname, '..', 'download-section.js'), 'utf8');
-const ids = ['download-release', 'download-none', 'download-link', 'download-version', 'download-file', 'download-sha', 'download-signer'];
+const ids = ['download-release', 'download-none', 'download-version', 'download-file', 'download-sha', 'download-signer'];
 
 async function render(json) {
-  const els = Object.fromEntries(ids.map((id) => [id, { id, hidden: id === 'download-release', textContent: '', href: '#download' }]));
+  const els = Object.fromEntries(ids.map((id) => [id, { id, hidden: id === 'download-release', textContent: '' }]));
+  els['download-form'] = { action: '#download', dataset: {}, addEventListener() {}, elements: { licenseKey: { value: '' } } };
   const context = {
     URL,
     document: { getElementById: (id) => els[id] ?? null },
@@ -21,22 +22,22 @@ async function render(json) {
   return els;
 }
 
-test('a valid download.json fills the section and links the relay', async () => {
+test('a valid download.json fills the section and points the form at the relay', async () => {
   const els = await render({
     version: '1.0.0', file: 'WarriorTaxProElite-1.0.0.msi', sha256: 'b'.repeat(64), size: 10 * 1024 * 1024,
     signer: 'Warrior Financial Services LLC', url: 'https://api.warriortaxservice.com/download/installer',
   });
   assert.equal(els['download-release'].hidden, false);
   assert.equal(els['download-none'].hidden, true);
-  assert.equal(els['download-link'].href, 'https://api.warriortaxservice.com/download/installer');
+  assert.equal(els['download-form'].action, 'https://api.warriortaxservice.com/download/installer');
   assert.equal(els['download-version'].textContent, 'Version 1.0.0 · 10 MB');
   assert.equal(els['download-sha'].textContent, 'b'.repeat(64));
   assert.equal(els['download-signer'].textContent, 'Signed by Warrior Financial Services LLC');
 });
 
-test('no download.json keeps "not released yet" and links nothing', async () => {
+test('no download.json keeps "not released yet" and offers nothing', async () => {
   const els = await render(undefined);
   assert.equal(els['download-release'].hidden, true);
   assert.equal(els['download-none'].hidden, false);
-  assert.equal(els['download-link'].href, '#download');
+  assert.equal(els['download-form'].action, '#download');
 });

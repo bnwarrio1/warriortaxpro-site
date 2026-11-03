@@ -426,6 +426,9 @@
   .download dt{color:var(--ink-3);font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding-top:3px}
   .download dd{margin:0;color:var(--ink);word-break:break-all}
   .download .dl-sha{font-family:var(--mono);font-size:12px}
+  .download form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin:0 0 4px}
+  .download .dl-label{flex-basis:100%;color:var(--ink-3);font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase}
+  .download .dl-key{flex:1 1 280px;min-width:0;padding:12px 14px;border-radius:10px;border:1px solid rgba(148,163,184,0.3);background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:14px;letter-spacing:0.06em}
   @media (max-width:640px){.download .dl-card{padding:24px}.download dl{grid-template-columns:1fr}}
 </style>
 </head>
@@ -845,7 +848,11 @@
       <h2>Warrior Tax Pro Elite for Windows</h2>
       <p class="dl-sub">The installer comes only from Warrior Tax Pro's own server. Your licence key arrives by email after purchase.</p>
       <div id="download-release" hidden>
-        <a class="btn-primary" id="download-link" href="#download">Download the installer <span class="arr">&rarr;</span></a>
+        <form id="download-form" method="post" action="#download" autocomplete="off">
+          <label class="dl-label" for="download-key">Your licence key, from your licence email</label>
+          <input class="dl-key" id="download-key" name="licenseKey" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
+          <button class="btn-primary" type="submit">Download the installer <span class="arr">&rarr;</span></button>
+        </form>
         <dl>
           <dt>Version</dt><dd id="download-version"></dd>
           <dt>File</dt><dd id="download-file"></dd>

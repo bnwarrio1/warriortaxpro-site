@@ -1,7 +1,10 @@
 // The Download section (ruled 2026-11-02): offices download the installer from the relay, the one
 // trusted origin, never a third-party file host. Everything shown comes from download.json, which
 // the release step writes (installer\dist\download.json), so a new release changes no code here.
-// Without a valid file the section says the installer is not released yet and links nothing.
+// Without a valid file the section says the installer is not released yet and offers nothing.
+// The download is a form POST of the licence key to the relay (ruled 2026-11-02): the key travels in
+// the request body only. The page never autofills or keeps it - autocomplete is off, nothing is
+// written to any browser storage, and the field is emptied once the form is sent.
 (function () {
   function downloadView(d) {
     if (!d || typeof d !== 'object') return null;
@@ -30,7 +33,15 @@
     var none = document.getElementById('download-none');
     if (!box || !none) return;
     if (!view) { box.hidden = true; none.hidden = false; return; }
-    document.getElementById('download-link').href = view.href;
+    var form = document.getElementById('download-form');
+    form.action = view.href;
+    if (!form.dataset || !form.dataset.wired) {
+      form.addEventListener('submit', function () {
+        // After the browser has taken the value for the POST: the key does not stay on the page.
+        setTimeout(function () { form.elements.licenseKey.value = ''; }, 0);
+      });
+      if (form.dataset) form.dataset.wired = '1';
+    }
     document.getElementById('download-version').textContent = view.version + (view.size ? ' · ' + view.size : '');
     document.getElementById('download-file').textContent = view.file;
     document.getElementById('download-sha').textContent = view.sha256;
