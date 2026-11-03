@@ -27,6 +27,12 @@ test('a released installer shows its version, file, SHA-256, signer and the rela
 for (const [why, bad] of [
   ['no file', null],
   ['an http link', { ...release, url: 'http://api.warriortaxservice.com/download/installer' }],
+  // The form POSTs the licence key to this address, so it must be the relay's own host (lane 3, 2026-11-03).
+  ['another site', { ...release, url: 'https://downloads.example.com/api/updates/installer/download' }],
+  ['a lookalike host', { ...release, url: 'https://api.warriortaxservice.com.example.net/api/updates/installer/download' }],
+  ['a subdomain of the relay', { ...release, url: 'https://x.api.warriortaxservice.com/api/updates/installer/download' }],
+  ['the relay with a user part', { ...release, url: 'https://evil@api.warriortaxservice.com/api/updates/installer/download' }],
+  ['the relay on another port', { ...release, url: 'https://api.warriortaxservice.com:8443/api/updates/installer/download' }],
   ['a link that is not a URL', { ...release, url: 'download/installer' }],
   ['a hash that is not SHA-256', { ...release, sha256: 'abc' }],
   ['no signer', { ...release, signer: '' }],
