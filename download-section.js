@@ -6,11 +6,16 @@
 // the request body only. The page never autofills or keeps it - autocomplete is off, nothing is
 // written to any browser storage, and the field is emptied once the form is sent.
 (function () {
+  // The relay, the one trusted origin: the only host the form may send a licence key to.
+  var RELAY_HOST = 'api.warriortaxservice.com';
+
   function downloadView(d) {
     if (!d || typeof d !== 'object') return null;
     var url;
     try { url = new URL(d.url); } catch (e) { return null; }
     if (url.protocol !== 'https:') return null;
+    // The form POSTs the licence key here, so only the relay itself: its exact host, the default port, no user part.
+    if (url.hostname !== RELAY_HOST || url.port !== '' || url.username !== '' || url.password !== '') return null;
     if (!/^\d+\.\d+\.\d+$/.test(String(d.version))) return null;
     if (!/^[A-Za-z0-9._-]+\.msi$/.test(String(d.file))) return null;
     if (!/^[0-9a-f]{64}$/.test(String(d.sha256))) return null;
