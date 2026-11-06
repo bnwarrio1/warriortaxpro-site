@@ -15,7 +15,7 @@ const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const js = fs.readFileSync(path.join(root, 'buy-section.js'), 'utf8');
 const RELAY = 'https://api.warriortaxservice.com';
 
-test('the desktop buttons open the EFIN step, not a Payment Link; the pre-order link is unchanged', () => {
+test('the desktop buttons open the EFIN step, not a Payment Link', () => {
   const pro = html.match(/<a[^>]*data-tier="Professional"[^>]*>Choose Professional<\/a>/);
   const plus = html.match(/<a[^>]*data-tier="ProfessionalPlus"[^>]*>Choose Professional Plus<\/a>/);
   assert.ok(pro && plus, 'both desktop buttons carry their tier');
@@ -25,7 +25,7 @@ test('the desktop buttons open the EFIN step, not a Payment Link; the pre-order 
   }
   assert.ok(!html.includes('buy.stripe.com/8x214nbyO5rtd0f5312B202'), 'the Professional Payment Link is gone');
   assert.ok(!html.includes('buy.stripe.com/28E6oH1Yeg67bWbfHF2B203'), 'the Professional Plus Payment Link is gone');
-  assert.ok(html.includes('https://buy.stripe.com/00w3cvbyOg671hxanl2B201'), 'the Online pre-order is pair 5, not this page');
+  // The Online card goes to the Pro checkout step (tests/online-card.test.js), never straight to a Payment Link.
 });
 
 test('the buy step asks for the EFIN and an email, and loads its script', () => {
