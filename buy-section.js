@@ -17,8 +17,10 @@
   var tier = '';
   var polls = 0;
 
-  function say(text) {
+  // The line under the button: its words as text, its state as data (error, pending, success) for its colour.
+  function say(text, state) {
     status.textContent = text;
+    status.dataset.state = state || 'error';
     status.hidden = false;
   }
 
@@ -31,9 +33,12 @@
   }
 
   function answer(efin, body) {
-    if (body && body.status === 'validated') return pay(efin);
+    if (body && body.status === 'validated') {
+      say('EFIN validated. Opening payment...', 'success');
+      return pay(efin);
+    }
     if (body && body.status === 'pending') {
-      say(body.message || 'Warrior Tax Pro is validating this EFIN before the sale.');
+      say(body.message || 'Warrior Tax Pro is validating this EFIN before the sale.', 'pending');
       return true;
     }
     if (body && body.status === 'refused') return say(body.message || 'This EFIN did not pass validation.');

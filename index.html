@@ -309,6 +309,17 @@
   /* Colored CTAs for the non-featured tiers (each its own hue) */
   .pcard.tier-starter .pcta{background:linear-gradient(135deg,#5EEAD4,#34D399);color:#05070c;border-color:transparent}
   .pcard.tier-starter .pcta:hover{box-shadow:0 12px 32px -10px rgba(52,211,153,0.55)}
+  /* The desktop buy step's form (2026-11-06): the site's own input style (waitlist.html), one field per row. */
+  #buy-form{display:flex;flex-direction:column;gap:18px;max-width:440px;margin:28px 0 0}
+  .buy-field{display:flex;flex-direction:column;gap:7px}
+  .buy-field label{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3)}
+  #buy-form input{font-family:var(--body);font-size:14px;color:var(--ink);background:var(--bg-3);border:1px solid var(--hair-2);border-radius:10px;padding:12px 14px;transition:border-color .2s,box-shadow .2s;width:100%;box-sizing:border-box}
+  #buy-form input::placeholder{color:var(--ink-4)}
+  #buy-form input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(94,234,212,0.12)}
+  .buy-submit{width:100%;cursor:pointer;font-family:inherit}
+  .buy-status{margin:0;font-size:13px;line-height:1.5;color:var(--ink-2)}
+  .buy-status[data-state="error"]{color:var(--red)}
+  .buy-status[data-state="success"]{color:var(--green)}
   .pcard.tier-pro .pcta{background:linear-gradient(135deg,#38BDF8,#818CF8);color:#05070c;border-color:transparent}
   .pcard.tier-pro .pcta:hover{box-shadow:0 12px 32px -10px rgba(129,140,248,0.55)}
 
@@ -834,15 +845,17 @@
     <p class="sec-sub">IRS Publication 1345 requires e-file software to validate each office's EFIN before it is sold. Enter your EFIN and the email we can reach you at. Once it is validated, payment opens with Stripe.</p>
     <form id="buy-form" autocomplete="off" novalidate>
       <input type="hidden" name="tier" value="">
-      <label>EFIN (your 6-digit IRS e-file ID)
-        <input name="efin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required>
-      </label>
-      <label>Email
-        <input name="email" type="email" maxlength="254" required>
-      </label>
-      <button type="submit" class="pcta">Check my EFIN</button>
+      <div class="buy-field">
+        <label for="buy-efin">EFIN (your 6-digit IRS e-file ID)</label>
+        <input id="buy-efin" name="efin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" required>
+      </div>
+      <div class="buy-field">
+        <label for="buy-email">Email</label>
+        <input id="buy-email" name="email" type="email" maxlength="254" autocomplete="email" required>
+      </div>
+      <button type="submit" class="pcta buy-submit">Check my EFIN</button>
+      <p id="buy-status" class="buy-status" role="status" aria-live="polite" hidden></p>
     </form>
-    <p id="buy-status" role="status" aria-live="polite" hidden></p>
     <noscript><p>This step needs JavaScript. Or email support with your EFIN and we will validate it and send you the payment link.</p></noscript>
   </div>
 </section>
