@@ -55,7 +55,7 @@ function page(replies) {
     hidden: true, elements: { efin: field('900100'), email: field('owner@site.test'), tier: field('') },
     addEventListener: (ev, fn) => { listeners['form:' + ev] = fn; },
   };
-  const status = { textContent: '', hidden: true };
+  const status = { textContent: '', hidden: true, dataset: {} };
   const section = { hidden: true, scrollIntoView() {} };
   const buttons = ['Professional', 'ProfessionalPlus'].map((tier) => ({
     dataset: { tier }, addEventListener: (ev, fn) => { listeners['btn:' + tier + ':' + ev] = fn; },
@@ -146,4 +146,30 @@ test('the relay\'s own refusal and an unreachable relay are said in words, never
   await down.submit(); await settle();
   assert.match(down.status.textContent, /could not be reached/);
   assert.deepEqual([...bad.navigated, ...down.navigated], []);
+});
+
+// 2026-11-06: the inline line under the button carries its state, set as data (never markup): error, pending, success.
+test('the line under the button says error, pending or success', async () => {
+  const refused = page([{ status: 200, body: { status: 'refused', message: 'This EFIN did not pass validation.' } }]);
+  refused.choose('Professional');
+  await refused.submit(); await settle();
+  assert.equal(refused.status.dataset.state, 'error');
+
+  const malformed = page([]);
+  malformed.form.elements.efin.value = '12';
+  malformed.choose('Professional');
+  await malformed.submit(); await settle();
+  assert.equal(malformed.status.dataset.state, 'error');
+
+  const pending = page([{ status: 202, body: { status: 'pending', request: 'b'.repeat(32), message: 'Validating.' } }]);
+  pending.choose('Professional');
+  await pending.submit(); await settle();
+  assert.equal(pending.status.dataset.state, 'pending');
+
+  const ok = page([{ status: 200, body: { status: 'validated' } }]);
+  ok.choose('Professional');
+  await ok.submit(); await settle();
+  assert.equal(ok.status.dataset.state, 'success');
+  assert.match(ok.status.textContent, /validated/i);
+  assert.equal(ok.navigated.length, 1, 'and payment opens');
 });
