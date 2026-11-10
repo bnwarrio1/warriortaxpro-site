@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Download Warrior Tax Pro Elite | Warrior Financial Services LLC</title>
     <meta name="description" content="Warrior Tax Pro Elite 1.0 for Windows. System requirements, how your licence key and download link arrive, and how to check the installer is genuine." />
+    <meta name="referrer" content="no-referrer" />
     <link rel="icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -75,6 +76,35 @@
             cursor: not-allowed; user-select: none;
         }
 
+        /* Shown by download-link.js when the page is opened by the link in a licence email. */
+        .link-box {
+            margin-top: 16px;
+            background: #161B22;
+            border: 1px solid #21262D;
+            border-left: 3px solid #00E5FF;
+            border-radius: 8px;
+            padding: 22px 24px;
+        }
+        .link-box dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; font-size: 14px; margin-bottom: 14px; }
+        .link-box dt { color: #8B949E; font-weight: 300; }
+        .link-box dd { color: #E6EDF3; font-weight: 500; overflow-wrap: anywhere; }
+        .link-box code, .new-link code { font-family: Consolas, monospace; font-size: 13px; color: #C9D1D9; overflow-wrap: anywhere; }
+        .link-box p { font-size: 14px; font-weight: 300; margin-bottom: 12px; }
+        .download-go, .new-link button {
+            background: #00BCD4; color: #0D1117;
+            border: 0; border-radius: 8px;
+            padding: 12px 26px; font-size: 15px; font-weight: 600; font-family: inherit;
+            cursor: pointer;
+        }
+        .download-go:disabled { background: #21262D; color: #8B949E; cursor: not-allowed; }
+        .new-link input {
+            background: #0D1117; color: #E6EDF3;
+            border: 1px solid #30363D; border-radius: 8px;
+            padding: 11px 14px; font-size: 15px; font-family: Consolas, monospace;
+            width: 100%; max-width: 340px; margin: 6px 12px 10px 0;
+        }
+        .new-link label { display: block; font-size: 14px; font-weight: 300; }
+
         .content { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
 
         .section { margin-bottom: 36px; }
@@ -135,7 +165,27 @@
                 Warrior Tax Pro Elite 1.0 for Windows (64-bit)
                 <small>Signed by Warrior Financial Services LLC</small>
             </div>
-            <span class="download-btn" aria-disabled="true">Your download link comes by email</span>
+            <span class="download-btn" id="download-placeholder" aria-disabled="true">Your download link comes by email</span>
+        </div>
+
+        <!-- Opened by the link in a licence email (this page's address, then # and the link's token): download-link.js
+             asks Warrior Tax Pro what the link serves, fills this in and shows it. The token is posted in a form body,
+             never put in an address. -->
+        <div class="link-box" id="download-link" hidden>
+            <p id="download-status" role="status" hidden></p>
+            <dl id="download-facts" hidden>
+                <dt>Version</dt><dd id="dl-version"></dd>
+                <dt>File</dt><dd id="dl-file"></dd>
+                <dt>Size</dt><dd id="dl-size"></dd>
+                <dt>SHA-256</dt><dd id="dl-sha256"></dd>
+                <dt>Publisher</dt><dd id="dl-publisher"></dd>
+                <dt>This link</dt><dd id="dl-left"></dd>
+            </dl>
+            <p id="dl-check" hidden>To check the file once it has downloaded, open PowerShell in your Downloads folder and run this. It must answer <strong>True</strong>:<br><code id="dl-check-line"></code></p>
+            <form id="download-form" method="post" action="https://api.warriortaxservice.com/api/updates/installer/download" hidden>
+                <input type="hidden" name="token" autocomplete="off">
+                <button type="submit" class="download-go">Download</button>
+            </form>
         </div>
     </div>
 
@@ -164,6 +214,17 @@
             </div>
         </div>
 
+        <div class="section new-link">
+            <h2>Need a new download link?</h2>
+            <p>A download link works for 7 days and 5 downloads. For a new one, enter your licence key. We email the link to the address on your licence; it is never shown here.</p>
+            <form id="new-link-form">
+                <label for="new-link-key">Licence key</label>
+                <input id="new-link-key" name="licenseKey" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="WTPE-XXXX-XXXX-XXXX-XXXX" required>
+                <button type="submit">Email me a new link</button>
+            </form>
+            <p id="new-link-status" role="status" hidden></p>
+        </div>
+
         <div class="section">
             <h2>Check that the installer is genuine</h2>
             <p>Before you open the installer, right-click it, choose <strong>Properties</strong>, then the <strong>Digital Signatures</strong> tab. The signer must be <strong>Warrior Financial Services LLC</strong>, and its <strong>Details</strong> must say <strong>"This digital signature is OK."</strong> When you install, Windows names the same publisher.</p>
@@ -182,5 +243,6 @@
         <a href="https://warriortaxpro.com/privacy-policy">Privacy Policy</a> &nbsp;|&nbsp;
         <a href="https://warriortaxpro.com/terms">Terms &amp; Conditions</a>
     </footer>
+    <script src="download-link.js" defer></script>
 </body>
 </html>
