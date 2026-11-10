@@ -840,6 +840,20 @@
       <label>Email
         <input name="email" type="email" maxlength="254" required>
       </label>
+      <label>Firm's TIN (the EIN, or your SSN when the EFIN was issued to you as an individual)
+        <input name="tin" type="password" autocomplete="off" inputmode="numeric" maxlength="11" required>
+      </label>
+      <label>TIN type
+        <select name="tinType" required>
+          <option value="EIN" selected>EIN</option>
+          <option value="SSN">SSN</option>
+        </select>
+      </label>
+      <p class="buy-note">The IRS requires the firm's TIN to verify the EFIN.</p>
+      <label class="buy-consent">
+        <input name="ispAuthorized" type="checkbox">
+        I authorize Warrior Financial Services, as our Intermediate Service Provider, to validate our EFIN with the IRS and register our Vendor Control Number.
+      </label>
       <button type="submit" class="pcta">Check my EFIN</button>
     </form>
     <p id="buy-status" role="status" aria-live="polite" hidden></p>
