@@ -19,8 +19,7 @@
 
   var tier = '';
   var polls = 0;
-  var TIN_NEEDED = "The IRS requires the firm's TIN to verify the EFIN: the EIN, or the SSN when the EFIN was issued to an " +
-    'individual, nine digits, and which one it is (EIN or SSN).';
+  var TIN_NEEDED = "Enter the firm's 9-digit EIN, or your SSN if the EFIN is in your own name. The IRS needs it to check the EFIN.";
 
   // The nine digits of a TIN typed with or without its dashes or spaces; null for anything else.
   function tinDigits(typed) {
