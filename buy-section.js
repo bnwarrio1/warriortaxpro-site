@@ -35,16 +35,20 @@
     status.hidden = false;
   }
 
-  function pay(efin) {
-    location.assign(RELAY + '/api/checkout/start?tier=' + encodeURIComponent(tier) + '&efin=' + encodeURIComponent(efin));
+  // The relay binds a validation to the check that earned it (2026-11-10): payment opens from that check's handle,
+  // sent with the EFIN. A relay that sends no handle is the build before that one, which takes the EFIN alone.
+  function pay(efin, handle) {
+    var url = RELAY + '/api/checkout/start?tier=' + encodeURIComponent(tier) + '&efin=' + encodeURIComponent(efin);
+    if (/^[0-9a-f]{32}$/.test(String(handle || ''))) url += '&request=' + handle;
+    location.assign(url);
   }
 
   function unreachable() {
     say('Warrior Tax Pro could not be reached to check the EFIN. Check your connection and try again.');
   }
 
-  function answer(efin, body) {
-    if (body && body.status === 'validated') return pay(efin);
+  function answer(efin, body, handle) {
+    if (body && body.status === 'validated') return pay(efin, body.request || handle);
     if (body && body.status === 'pending') {
       var words = [body.message || 'Warrior Tax Pro is validating this EFIN before the sale.'];
       if (/^[0-9]{4}$/.test(String(body.tinLastFour || ''))) words.push('(TIN ending ' + body.tinLastFour + '.)');
@@ -62,7 +66,7 @@
     setTimeout(function () {
       return fetch(RELAY + '/api/checkout/efin-check/' + encodeURIComponent(handle))
         .then(function (r) { return r.json(); })
-        .then(function (body) { if (answer(efin, body) === true) poll(efin, handle); })
+        .then(function (body) { if (answer(efin, body, handle) === true) poll(efin, handle); })
         .catch(function () { poll(efin, handle); });
     }, POLL_MS);
   }
