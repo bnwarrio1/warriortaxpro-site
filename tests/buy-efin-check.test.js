@@ -114,7 +114,26 @@ function page(replies) {
 }
 const settle = () => new Promise((r) => setImmediate(r));
 
-test('a validated EFIN goes straight to payment with its tier and EFIN', async () => {
+// The relay binds a validation to the check that earned it (lane 3's question, 2026-11-10): "validated" comes with that
+// check's handle, and /api/checkout/start opens payment only from it. The page sends the handle with the EFIN.
+test('a validated EFIN goes to payment with its tier, its EFIN and the handle of the check that validated it', async () => {
+  const handle = 'd'.repeat(32);
+  const p = page([{ status: 200, body: { status: 'validated', request: handle, tinLastFour: '0123' } }]);
+  p.choose('ProfessionalPlus');
+  await p.submit(); await settle();
+
+  assert.deepEqual(p.navigated, [`${RELAY}/api/checkout/start?tier=ProfessionalPlus&efin=900100&request=${handle}`]);
+});
+
+test('a handle that is not 32 hex characters is never put in the address', async () => {
+  const p = page([{ status: 200, body: { status: 'validated', request: 'x&tier=Other' } }]);
+  p.choose('Professional');
+  await p.submit(); await settle();
+
+  assert.deepEqual(p.navigated, [`${RELAY}/api/checkout/start?tier=Professional&efin=900100`]);
+});
+
+test('a validated EFIN from a relay that sends no handle still goes to payment with its tier and EFIN', async () => {
   const p = page([{ status: 200, body: { status: 'validated' } }]);
   p.choose('ProfessionalPlus');
   assert.equal(p.section.hidden, false);
@@ -194,7 +213,8 @@ test('a pending EFIN is shown as pending, its handle checked again, and payment 
   assert.equal(p.calls[1].url, `${RELAY}/api/checkout/efin-check/${handle}`);
   assert.deepEqual(p.navigated, [], 'still pending');
   await p.tick();
-  assert.deepEqual(p.navigated, [`${RELAY}/api/checkout/start?tier=Professional&efin=900100`]);
+  assert.deepEqual(p.navigated, [`${RELAY}/api/checkout/start?tier=Professional&efin=900100&request=${handle}`],
+    'payment opens from the handle the page was waiting on');
 });
 
 test('a refused EFIN is told so and never reaches payment', async () => {
