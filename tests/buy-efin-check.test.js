@@ -44,7 +44,9 @@ test('the buy step asks for the EFIN and an email, and loads its script', () => 
   assert.match(html, /<script src="buy-section\.js" defer><\/script>/);
 });
 
-test("the buy step asks for the firm's TIN in a masked box, its type, why, and the ISP authorization in the relay's words", () => {
+// Bassam's rule (2026-11-11): keep what a buyer sees simple. One masked box in plain words, EIN or SSN as two small
+// options with EIN chosen, one line of why, one consent line.
+test("the buy step asks for the firm's EIN in one masked box, EIN or SSN as two options, why, and the ISP authorization in the relay's words", () => {
   const section = html.slice(html.indexOf('id="buy"'), html.indexOf('</section>', html.indexOf('id="buy"')));
   const tin = section.match(/<input[^>]*name="tin"[^>]*>/);
   assert.ok(tin, 'a TIN box');
@@ -52,11 +54,15 @@ test("the buy step asks for the firm's TIN in a masked box, its type, why, and t
   assert.match(tin[0], /autocomplete="off"/);
   assert.match(tin[0], /inputmode="numeric"/);
   assert.match(tin[0], /required/);
-  const type = section.match(/<select[^>]*name="tinType"[^>]*>([\s\S]*?)<\/select>/);
-  assert.ok(type, "the TIN's type");
-  assert.match(type[1], /<option value="EIN"[^>]*>/);
-  assert.match(type[1], /<option value="SSN"[^>]*>/);
-  assert.match(section, /The IRS requires the firm's TIN to verify the EFIN/, 'one line says why');
+  assert.ok(section.includes('Firm EIN (or your SSN, if the EFIN is in your own name)'), 'the box in plain words');
+  assert.doesNotMatch(section, /<select/, 'no drop-down');
+  const types = section.match(/<input[^>]*name="tinType"[^>]*>/g) || [];
+  assert.equal(types.length, 2, 'EIN or SSN: two small options');
+  assert.ok(types.every((t) => /type="radio"/.test(t)));
+  assert.ok(types.some((t) => /value="EIN"/.test(t) && /checked/.test(t)), 'EIN is chosen to start with');
+  assert.ok(types.some((t) => /value="SSN"/.test(t) && !/checked/.test(t)));
+  assert.match(section, /The IRS needs it to check the EFIN\./, 'one line says why');
+  assert.doesNotMatch(section, /\bTIN\b/, 'the page says EIN or SSN, never TIN');
   const consent = section.match(/<input[^>]*name="ispAuthorized"[^>]*>/);
   assert.ok(consent, 'the ISP authorization');
   assert.match(consent[0], /type="checkbox"/);
@@ -182,7 +188,8 @@ test('a TIN that is not nine digits, or no TIN type, is refused on the page with
     p.choose('Professional');
     await p.submit(); await settle();
     assert.equal(p.calls.length, 0, `${tin}/${type}: the relay is not asked`);
-    assert.match(p.status.textContent, /The IRS requires the firm's TIN/);
+    assert.equal(p.status.textContent,
+      "Enter the firm's 9-digit EIN, or your SSN if the EFIN is in your own name. The IRS needs it to check the EFIN.");
     assert.ok(!p.status.textContent.includes('12345678') && !p.status.textContent.includes(TIN));
   }
 });
